@@ -7,6 +7,7 @@ import subprocess
 import numpy as np
 from scipy.fft import dct, idct
 import pywt
+import sys
 
 class Exercises:
     def RGBtoYUV(self, r, g, b):
@@ -16,9 +17,9 @@ class Exercises:
         return Y, U, V
 
     def YUVtoRGB(self, Y, U, V):
-        R = 1.164 * (Y - 16) + 2.018 * (U - 128)
+        R = 1.164 * (Y - 16) + 1.596 * (V - 128)
         G = 1.164 * (Y - 16) - 0.813 * (V - 128) - 0.391 * (U - 128)
-        B = 1.164 * (Y - 16) + 1.596 * (V - 128)
+        B = 1.164 * (Y - 16) + 2.018 * (U - 128)
         return R, G, B
 
     def resize(self, input, output, w, h):
@@ -29,15 +30,13 @@ class Exercises:
 
 
 class dct_utils:
-    def __init__(self, type=2, norm='ortho'):
-        self.type = type
-        self.norm = norm
-
-    def convert(self, input_data):
-        return dct(input_data, type=self.type, norm=self.norm, axis=-1)
     
-    def decode(self, transformed_data):
-        return idct(transformed_data, type=self.type, norm=self.norm, axis=-1)
+    def dct_converter(self, a):
+        return dct(dct(a.T, norm='ortho').T, norm='ortho')
+
+    def dft_decoder(self, a):
+        return idct(idct(a.T, norm='ortho').T, norm='ortho')
+
 
 class dwt_utils:
     def __init__(self, wavelet='haar', level=1):
@@ -56,69 +55,36 @@ exercise.bw_converter("mbappe.jpg", "mbappe_bw.jpg")
 
 
 #TESTS
+exercises = Exercises()
 
-# Llamamos a RGBtoYUV y verificamos si da algún error
-try:
-    r, g, b = 255, 0, 0
-    Y, U, V = exercise.RGBtoYUV(r, g, b)
-    print(f"RGBtoYUV Result: Y={Y}, U={U}, V={V}")
-except Exception as e:
-    print(f"Error en RGBtoYUV: {e}")
+# Probar RGB a YUV
+print("Prueba RGB -> YUV:")
+r, g, b = 255, 0, 0  # Rojo puro
+Y, U, V = exercises.RGBtoYUV(r, g, b)
+print(f"RGB({r}, {g}, {b}) -> YUV({Y:.2f}, {U:.2f}, {V:.2f})")
 
-# Llamamos a YUVtoRGB y verificamos si da algún error
-try:
-    Y, U, V = 76.25, 84.0, 255.0
-    r, g, b = exercise.YUVtoRGB(Y, U, V)
-    print(f"YUVtoRGB Result: R={r}, G={g}, B={b}")
-except Exception as e:
-    print(f"Error en YUVtoRGB: {e}")
+# Valores esperados para YUV
+expected_Y, expected_U, expected_V = 81.48, 90.44, 240.57
 
-# Llamamos a resize y verificamos si da algún error
-try:
-    exercise.resize("input.jpg", "output_resized.jpg", 300, 300)
-    print("Resize funcionó correctamente")
-except Exception as e:
-    print(f"Error en resize: {e}")
+# Calcular y mostrar desviación para YUV
+print("Desviaciones (YUV):")
+print(f"Desviación en Y: {Y - expected_Y:.3f}")
+print(f"Desviación en U: {U - expected_U:.3f}")
+print(f"Desviación en V: {V - expected_V:.3f}\n")
 
-# Llamamos a bw_converter y verificamos si da algún error
-try:
-    exercise.bw_converter("input.jpg", "output_bw.jpg")
-    print("BW Converter funcionó correctamente")
-except Exception as e:
-    print(f"Error en bw_converter: {e}")
+# Probar YUV a RGB
+print("Prueba YUV -> RGB:")
+r_out, g_out, b_out = exercises.YUVtoRGB(expected_Y, expected_U, expected_V)
+print(f"YUV({expected_Y}, {expected_U}, {expected_V}) -> RGB({r_out:.2f}, {g_out:.2f}, {b_out:.2f})")
 
+# Valores esperados para RGB
+expected_r, expected_g, expected_b = 255, 0, 0
 
-# Instanciamos dct_utils y llamamos a su método convert
-dct_util = dct_utils()
-try:
-    input_data = [1, 2, 3, 4, 5]
-    transformed_data = dct_util.convert(input_data)
-    print(f"DCT Transform Result: {transformed_data}")
-except Exception as e:
-    print(f"Error en DCT convert: {e}")
+# Calcular y mostrar desviación para RGB
+print("Desviaciones (RGB):")
+print(f"Desviación en R: {r_out - expected_r:.3f}")
+print(f"Desviación en G: {g_out - expected_g:.3f}")
+print(f"Desviación en B: {b_out - expected_b:.3f}")
 
-# Llamamos a decode en dct_utils
-try:
-    transformed_data = [1, 2, 3, 4, 5]
-    decoded_data = dct_util.decode(transformed_data)
-    print(f"DCT Inverse Result: {decoded_data}")
-except Exception as e:
-    print(f"Error en DCT decode: {e}")
-
-
-# Instanciamos dwt_utils y llamamos a su método transform
-dwt_util = dwt_utils()
-try:
-    data = [[1, 2], [3, 4]]  # Ejemplo simple de datos
-    coeffs = dwt_util.transform(data)
-    print(f"DWT Transform Result: {coeffs}")
-except Exception as e:
-    print(f"Error en DWT transform: {e}")
-
-# Llamamos a inverse_transform en dwt_utils
-try:
-    coeffs = [np.array([[1, 2], [3, 4]])]  # Ejemplo de coeficientes
-    reconstructed_data = dwt_util.inverse_transform(coeffs)
-    print(f"DWT Inverse Result: {reconstructed_data}")
-except Exception as e:
-    print(f"Error en DWT inverse_transform: {e}")
+# Forzar la salida a la terminal de inmediato
+sys.stdout.flush()
