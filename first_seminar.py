@@ -29,13 +29,21 @@ class Exercises:
 
 
 class dct_utils:
-    def convert(self, input):
-            return dct(input_data, type=self.type, norm=self.norm, axis=-1)
+    def __init__(self, type=2, norm='ortho'):
+        self.type = type
+        self.norm = norm
+
+    def convert(self, input_data):
+        return dct(input_data, type=self.type, norm=self.norm, axis=-1)
     
-    def decode(self, transformed):
-            return idct(transformed_data, type=self.type, norm=self.norm, axis=-1)
+    def decode(self, transformed_data):
+        return idct(transformed_data, type=self.type, norm=self.norm, axis=-1)
 
 class dwt_utils:
+    def __init__(self, wavelet='haar', level=1):
+        self.wavelet = wavelet
+        self.level = level
+    
     def transform(self, data):
         return pywt.wavedec2(data, self.wavelet, level=self.level)
     
