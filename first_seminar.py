@@ -1,5 +1,6 @@
 #No usar FFMPEG porque es libreria experimental, hacerlo con import OS y subprocess
 
+from PIL import Image
 #FFMPEG UTILS 
 import os
 import subprocess
@@ -10,6 +11,8 @@ import pywt
 import sys
 
 class Exercises:
+
+    #EXERCISE 2
     def RGBtoYUV(self, r, g, b):
         Y = 0.257 * r + 0.504 * g + 0.098 * b + 16
         U = -0.148 * r - 0.291 * g + 0.439 * b + 128
@@ -21,16 +24,41 @@ class Exercises:
         G = 1.164 * (Y - 16) - 0.813 * (V - 128) - 0.391 * (U - 128)
         B = 1.164 * (Y - 16) + 2.018 * (U - 128)
         return R, G, B
-
+    
+    #EXERCISE 3
     def resize(self, input, output, w, h):
         result = subprocess.run(["ffmpeg", "-i", input, "-vf", f"scale={w}:{h}", output],capture_output=True,text=True)
     
-    def bw_converter(self,input,output,):
+    #EXERCISE 4
+    def serpentine(self, input):
+
+        img = Image.open(input)
+        w,h = img.size
+        file = open(input, 'rb')
+        data = file.read()
+        serp_data = []
+        
+        for i in range(h):
+            start = i*w #en cada fila avanzo un punto horizontalment par hacer diagonal
+            end = start + w
+            if(i%2 != 0):
+                for j in range(w - 1, -1, -1):
+                    serp_data.append(data[i* w + j])
+            else:
+                for j in range(w):
+                    serp_data.append(data[i* w + j])
+        
+        return bytes(serp_data)
+
+
+    #EXERCISE 5
+    def bw_converter(self,input,output):
         result = subprocess.run(["ffmpeg", "-i", input, "-vf", "format=gray", output], capture_output=True, text=True)
 
 
 class dct_utils:
     
+    #EXERCISE 6
     def dct_converter(self, a):
         return dct(dct(a.T, norm='ortho').T, norm='ortho')
 
@@ -39,6 +67,8 @@ class dct_utils:
 
 
 class dwt_utils:
+
+    #EXERCISE 7
     def __init__(self, wavelet='haar', level=1):
         self.wavelet = wavelet
         self.level = level
@@ -52,6 +82,8 @@ class dwt_utils:
 exercise = Exercises()
 exercise.resize("mbappe.jpg", "mbappe_resized.jpg", 300, 300)
 exercise.bw_converter("mbappe.jpg", "mbappe_bw.jpg")
+serp = exercise.serpentine("mbappe.jpg")
+print(serp)
 
 
 #TESTS
