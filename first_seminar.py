@@ -1,6 +1,9 @@
 #No usar FFMPEG porque es libreria experimental, hacerlo con import OS y subprocess
 
 from PIL import Image
+from typing import Iterator, Tuple, List
+from itertools import groupby
+
 #FFMPEG UTILS 
 import os
 import subprocess
@@ -51,10 +54,13 @@ class Exercises:
         return bytes(serp_data)
 
 
-    #EXERCISE 5
+    #EXERCISE 5.1
     def bw_converter(self,input,output):
         result = subprocess.run(["ffmpeg", "-i", input, "-vf", "format=gray", output], capture_output=True, text=True)
 
+    #EXERCISE 5.2
+    def run_length_encode(self,data: List[int]) -> Iterator[Tuple[int, int]]:
+        return ((x, sum(1 for _ in y)) for x, y in groupby(data))
 
 class dct_utils:
     
@@ -79,17 +85,15 @@ class dwt_utils:
     def inverse_transform(self, coeffs):
         return pywt.waverec2(coeffs, self.wavelet)
 
-exercise = Exercises()
-exercise.resize("mbappe.jpg", "mbappe_resized.jpg", 300, 300)
-exercise.bw_converter("mbappe.jpg", "mbappe_bw.jpg")
-serp = exercise.serpentine("mbappe.jpg")
-print(serp)
 
 
-#TESTS
+
+#EXERCISE 8, TESTS
 exercises = Exercises()
 
-# Probar RGB a YUV
+# EX2: Probar RGB a YUV
+print()
+print("EXERCISE 2 TEST-----------------------------------------")
 print("Prueba RGB -> YUV:")
 r, g, b = 255, 0, 0  # Rojo puro
 Y, U, V = exercises.RGBtoYUV(r, g, b)
@@ -117,6 +121,73 @@ print("Desviaciones (RGB):")
 print(f"Desviación en R: {r_out - expected_r:.3f}")
 print(f"Desviación en G: {g_out - expected_g:.3f}")
 print(f"Desviación en B: {b_out - expected_b:.3f}")
+
+# EX3: Resize imagen
+exercises.resize("mbappe.jpg", "mbappe_resized.jpg", 300, 300)
+
+
+# EX4: Serpentine
+print()
+print("EXERCISE 4 TEST-----------------------------------------")
+
+
+# EX5.1: Black & White
+exercises.bw_converter("mbappe.jpg", "mbappe_bw.jpg")
+
+
+# EX5.2: Run length encoder
+print()
+print("EXERCISE 5.2 TEST-----------------------------------------")
+aux = [1,1,3,3,4,4,5,6]
+encoded = list(exercises.run_length_encode(aux))
+print("Input Array:", aux)
+print("Run Length Encoded Array: ", encoded)
+
+
+# EX6: DCT encoder-decoder
+print()
+print("EXERCISE 6 TEST-----------------------------------------")
+utils = dct_utils()
+input_data = np.array([[1, 2, 3, 4, 5, 6]], dtype=float)
+print("Input array:")
+print(input_data)
+
+dct_encoded = utils.dct_converter(input_data)
+print("\nDCT encoded output:")
+print(dct_encoded)
+
+decoded_output = utils.dft_decoder(dct_encoded)
+print("\nDecoded output (after applying IDCT):")
+print(decoded_output)
+
+# Verify if the decoded result matches with the input data.
+if np.allclose(decoded_output, input_data, atol=1e-6):
+    print("\nTest passed: Decoded output matches the original input.")
+else:
+    print("\nTest failed: Decoded output does not match the original input.")
+
+
+# EX7: DWT encoder-decoder
+print()
+print("EXERCISE 7 TEST-----------------------------------------")
+dwtutils = dwt_utils()
+input_data = np.array([[1, 2, 3, 4], [5, 6, 7, 8]], dtype=float) 
+print("Input array:")
+print(input_data)
+
+transformed_data = dwtutils.transform(input_data)
+print("\nDWT transformed data:")
+print(transformed_data)
+
+reconstructed_data = dwtutils.inverse_transform(transformed_data)
+print("\nReconstructed data after applying inverse DWT:")
+print(reconstructed_data)
+
+# Verify if the reconstructed data matches with the input data.
+if np.allclose(reconstructed_data, input_data, atol=1e-6):
+    print("\nTest passed: Decoded output matches the original input.")
+else:
+    print("\nTest failed: Decoded output does not match the original input.")
 
 # Forzar la salida a la terminal de inmediato
 sys.stdout.flush()
