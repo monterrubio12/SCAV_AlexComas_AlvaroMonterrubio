@@ -55,6 +55,39 @@ def run_length_encode(self,data: List[int]) -> Iterator[Tuple[int, int]]:
 In this case the tests have also been implemented in the final exercise of the seminar.
 
 ### S1 - Exercise 6
+In the sixth exercise of the seminar, we were asked to create a new class named `dct_utils`, which would implement the necessary methods to perform an encoding and decoding of a signal using Discrete Cosine Transform (DCT) operators. Inside this class, we have implemented the method `dct_converter()`to encode the signal, and the method `dct_decoder()`, to decode our encoded signals back to their original form. The implementation of the method is as follows:
+
+```python
+class dct_utils:
+    
+    #EXERCISE 6
+    def dct_converter(self, a):
+        return dct(dct(a.T, norm='ortho').T, norm='ortho')
+
+    def dct_decoder(self, a):
+        return idct(idct(a.T, norm='ortho').T, norm='ortho')
+
+```
+Again, the tests for this exercise have been implemented in the final exercise of the seminar.
+
 ### S1 - Exercise 7
+In the seventh exercise of the seminar, we were asked to perform a task similar to the previous one. We had to create a new class named `dwt_utils`, which implements the necessary methods for encoding and decoding a signal using Discrete Wavelet Transform (DWT). To do it we have used the `pywt` library. Inside this class, we have implemented the method ` __init__()` that is the constructor used to initialize the wavelet type and the decomposition level. Also we have implemented the `transform()` method, to encode our signal using DWT, and the `inverse_transform()` method to decode the encoded signal back to its original form. The implementation of the method is as follows:
+
+```python
+class dwt_utils:
+
+    #EXERCISE 7
+    def __init__(self, wavelet='haar', level=1):
+        self.wavelet = wavelet
+        self.level = level
+    
+    def transform(self, data):
+        return pywt.wavedec2(data, self.wavelet, level=self.level)
+    
+    def inverse_transform(self, coeffs):
+        return pywt.waverec2(coeffs, self.wavelet)
+```
+The tests for this exercise have been also implemented in the final exercise of the seminar.
+
 ### S1 - Exercise 8
 

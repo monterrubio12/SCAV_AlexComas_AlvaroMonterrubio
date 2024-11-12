@@ -68,7 +68,7 @@ class dct_utils:
     def dct_converter(self, a):
         return dct(dct(a.T, norm='ortho').T, norm='ortho')
 
-    def dft_decoder(self, a):
+    def dct_decoder(self, a):
         return idct(idct(a.T, norm='ortho').T, norm='ortho')
 
 
@@ -156,7 +156,7 @@ dct_encoded = utils.dct_converter(input_data)
 print("\nDCT encoded output:")
 print(dct_encoded)
 
-decoded_output = utils.dft_decoder(dct_encoded)
+decoded_output = utils.dct_decoder(dct_encoded)
 print("\nDecoded output (after applying IDCT):")
 print(decoded_output)
 
