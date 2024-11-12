@@ -92,7 +92,7 @@ The tests for this exercise have been also implemented in the final exercise of 
 ### S1 - Exercise 8
 Finaly, in the last exercise we were asked to cerate unit tests to our code, for each method and class.
 
-For the Exercise 2 we have performed a first test consisting on converting values from RGB to YUV, and also a second test consisting on converting values from YUV to RGB. The implementation of the test is as follows:
+For the __Exercise 2__ we have performed a first test consisting on converting values from RGB to YUV, and also a second test consisting on converting values from YUV to RGB. The implementation of the test is as follows:
 
 ```python
 print("Prueba RGB -> YUV:")
@@ -125,7 +125,7 @@ print(f"Desviación en B: {b_out - expected_b:.3f}")
 ```
 The obtained output after runing the previous test using the methods implemented in Exercise 2 is the next one
 
-`
+```
 Prueba RGB -> YUV:
 RGB(255, 0, 0) -> YUV(81.53, 90.26, 239.94)
 Desviaciones (YUV):
@@ -139,5 +139,9 @@ Desviaciones (RGB):
 Desviación en R: 0.880
 Desviación en G: -0.615
 Desviación en B: 0.423
-`
+```
+
+For the __Exercise 3__ we have performed a test consisting on resizing the image `Seminar_1\mbappe.jpg` , the result after performing this test is stored as `Seminar_1\mbappe_resized.jpg` and is the next one:
+
+![TEST ex 3, resized image](Seminar_1\mbappe.jpg)
 
