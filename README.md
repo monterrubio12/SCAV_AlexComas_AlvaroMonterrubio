@@ -35,6 +35,32 @@ def resize(self, input, output, w, h):
 To test this method, we have used the image `Seminar_1\mbappe.jpg`. The tests have been implemented in the final exercise of the seminar, so the result after runing this method will be presented and explained in the section __S1 - Exercise 8__.
 
 ### S1 - Exercise 4
+For this exercise, we were asked to create a method called serpentine that reads the bytes of an image file in a "serpentine" pattern, where each row of pixels is read alternately from left to right and right to left, creating a zigzag effect. This method transforms the raw byte data of an image into a format that simulates this serpentine reading pattern.
+In order to obtain the desired result, we haver first of all load the Image using the PIL library to get its dimensions (width and height), then, read the byte data by reading the file in binary mode and process rows in zigzag pattern by using different for loops.
+
+```python
+    def serpentine(self, input):
+
+        img = Image.open(input)
+        w,h = img.size
+        file = open(input, 'rb')
+        data = file.read()
+        serp_data = []
+        
+        for i in range(h):
+            start = i*w #en cada fila avanzo un punto horizontalment par hacer diagonal
+            end = start + w
+            if(i%2 != 0):
+                for j in range(w - 1, -1, -1):
+                    serp_data.append(data[i* w + j])
+            else:
+                for j in range(w):
+                    serp_data.append(data[i* w + j])
+        
+        return bytes(serp_data)
+```
+
+
 
 ### S1 - Exercise 5.1
 In the first part of the fifth exercise of the seminar, we were asked to extend again the class created in the Exercise 2 by adding a new method. This method was designed to transform an image to black and white by means of __ffmpeg__. We have named this method `bw_converter()`. In order to execute this method, we have used again the `subprocess` module to run ffmpeg from our local terminal while executing the script from our IDE. The implementation of the method is as follows:
