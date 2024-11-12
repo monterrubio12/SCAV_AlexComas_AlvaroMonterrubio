@@ -123,7 +123,7 @@ print(f"Desviación en G: {g_out - expected_g:.3f}")
 print(f"Desviación en B: {b_out - expected_b:.3f}")
 
 # EX3: Resize imagen
-exercises.resize("mbappe.jpg", "mbappe_resized.jpg", 300, 300)
+exercises.resize("Seminar_1/mbappe.jpg", "Seminar_1/mbappe_resized.jpg", 300, 300)
 
 
 # EX4: Serpentine
@@ -132,7 +132,7 @@ print("EXERCISE 4 TEST-----------------------------------------")
 
 
 # EX5.1: Black & White
-exercises.bw_converter("mbappe.jpg", "mbappe_bw.jpg")
+exercises.bw_converter("Seminar_1/mbappe.jpg", "Seminar_1/mbappe_bw.jpg")
 
 
 # EX5.2: Run length encoder
