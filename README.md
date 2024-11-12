@@ -150,3 +150,60 @@ For the __Exercise 4__ ....
 For the __Exercise 5.1__ we have performed a test consisting on transforming the image `Seminar_1\mbappe.jpg` to black and white, the result after performing this test is stored as `Seminar_1\mbappe_bw.jpg` and is the next one:
 
 ![TEST ex 5.1, black and white image](https://github.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/blob/2748a33599088e10138ca5b1a59571b14633d13f/Seminar_1/mbappe_bw.jpg)
+
+For the __Exercise 5.2__ we have performed a test consisting on encoding an array `[1, 1, 3, 3, 4, 4, 5, 6]` using the Run Length Encoder, the result after performing this test is `[(1, 2), (3, 2), (4, 2), (5, 1), (6, 1)]` where the first component of each of the elements in the encoded array is each of the values of the input array, and the second component of each of the elements is the number of times that the value apears in the input array. In order to perform this test we have implmented the next code:
+
+```python
+aux = [1,1,3,3,4,4,5,6]
+encoded = list(exercises.run_length_encode(aux))
+print("Input Array:", aux)
+print("Run Length Encoded Array: ", encoded)
+```
+
+For the __Exercise 6__ we have performed a test consisting on encoding an array `[[[1. 2. 3. 4. 5. 6.]]` using the DCT encoder, and after this decoding the encoded arary to compare if the obtained result is equal to the input array. The result after performing the encoding is `[[ 8.57321410e+00, -4.16256180e+00, -4.44089210e-16, -4.08248290e-01, -2.56395025e-16, -8.00788912e-02]]`. And the result after decoding the encoded signal is `[[1. 2. 3. 4. 5. 6.]]` that is exactly the input array. In order to perform this test we have implmented the next code:
+
+```python
+utils = dct_utils()
+input_data = np.array([[1, 2, 3, 4, 5, 6]], dtype=float)
+print("Input array:")
+print(input_data)
+
+dct_encoded = utils.dct_converter(input_data)
+print("\nDCT encoded output:")
+print(dct_encoded)
+
+decoded_output = utils.dct_decoder(dct_encoded)
+print("\nDecoded output (after applying IDCT):")
+print(decoded_output)
+
+# Verify if the decoded result matches with the input data.
+if np.allclose(decoded_output, input_data, atol=1e-6):
+    print("\nTest passed: Decoded output matches the original input.")
+else:
+    print("\nTest failed: Decoded output does not match the original input.")
+
+```
+
+Finaly for the __Exercise 7__ we have performed a test consisting on encoding an array `[[1. 2. 3. 4.],[5. 6. 7. 8.]]` using the DWT encoder, and after this decoding the encoded arary to compare if the obtained result is equal to the input array. The result after performing the encoding is `[array([[ 7., 11.]]), (array([[-4., -4.]]), array([[-1., -1.]]), array([[0.0000000e+00, 4.4408921e-16]]))]`. And the result after decoding the encoded signal is `[[1. 2. 3. 4.],[5. 6. 7. 8.]]` that is exactly the input array. In order to perform this test we have implmented the next code:
+
+```python
+dwtutils = dwt_utils()
+input_data = np.array([[1, 2, 3, 4], [5, 6, 7, 8]], dtype=float) 
+print("Input array:")
+print(input_data)
+
+transformed_data = dwtutils.transform(input_data)
+print("\nDWT transformed data:")
+print(transformed_data)
+
+reconstructed_data = dwtutils.inverse_transform(transformed_data)
+print("\nReconstructed data after applying inverse DWT:")
+print(reconstructed_data)
+
+# Verify if the reconstructed data matches with the input data.
+if np.allclose(reconstructed_data, input_data, atol=1e-6):
+    print("\nTest passed: Decoded output matches the original input.")
+else:
+    print("\nTest failed: Decoded output does not match the original input.")
+```
+
