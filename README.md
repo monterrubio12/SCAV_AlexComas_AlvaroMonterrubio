@@ -37,7 +37,7 @@ To test this method, we have used the image `Seminar_1\mbappe.jpg`. The tests ha
 ### S1 - Exercise 4
 
 ### S1 - Exercise 5.1
-In the first part of the fifth exercise of the seminar, we were asked to extend again the class created in the exercise 2 by adding a new method. This method was designed to transform an image to black and white by means of __ffmpeg__. We have named this method `bw_converter()`. In order to execute this method, we have used again the `subprocess` module to run ffmpeg from our local terminal while executing the script from our IDE. The implementation of the method is as follows:
+In the first part of the fifth exercise of the seminar, we were asked to extend again the class created in the Exercise 2 by adding a new method. This method was designed to transform an image to black and white by means of __ffmpeg__. We have named this method `bw_converter()`. In order to execute this method, we have used again the `subprocess` module to run ffmpeg from our local terminal while executing the script from our IDE. The implementation of the method is as follows:
 
 ```python
 def bw_converter(self,input,output):
@@ -46,6 +46,14 @@ def bw_converter(self,input,output):
 To test this method, we have used again the image `Seminar_1\mbappe.jpg`. Remember taht the tests have been implemented in the final exercise of the seminar, so the result after runing this method on our input image will be presented and explained in the section __S1 - Exercise 8__.
 
 ### S1 - Exercise 5.2
+In the second part of the fifth exercise of the seminar, we were asked to extend again the class created in the Exercise 2 by adding a new method. In this case the method was designed to perform run-lenght encoding on a given series of bytes. We have named this method `run_length_encode()`. For this method we stop using `subproces` module, cause we don't need __ffmpeg__. Instead, we perform the encoding by means of the Python's grupby to compress the byte series and return the encoded list. The implementation of the method is as follows:
+
+```python
+def run_length_encode(self,data: List[int]) -> Iterator[Tuple[int, int]]:
+        return ((x, sum(1 for _ in y)) for x, y in groupby(data))
+```
+In this case the tests have also been implemented in the final exercise of the seminar.
+
 ### S1 - Exercise 6
 ### S1 - Exercise 7
 ### S1 - Exercise 8
