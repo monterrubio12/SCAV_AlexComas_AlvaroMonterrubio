@@ -19,7 +19,7 @@ def RGBtoYUV(self, r, g, b):
         V = 0.439 * r - 0.368 * g - 0.071 * b + 128
         return Y, U, V
 
-    def YUVtoRGB(self, Y, U, V):
+def YUVtoRGB(self, Y, U, V):
         R = 1.164 * (Y - 16) + 1.596 * (V - 128)
         G = 1.164 * (Y - 16) - 0.813 * (V - 128) - 0.391 * (U - 128)
         B = 1.164 * (Y - 16) + 2.018 * (U - 128)
