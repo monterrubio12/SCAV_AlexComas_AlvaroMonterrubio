@@ -25,4 +25,9 @@ def YUVtoRGB(self, Y, U, V):
         B = 1.164 * (Y - 16) + 2.018 * (U - 128)
         return R, G, B
 ```
-
+### S1 - Exercise 3
+### S1 - Exercise 4
+### S1 - Exercise 5.1
+### S1 - Exercise 5.2
+### S1 - Exercise 6
+### S1 - Exercise 7
