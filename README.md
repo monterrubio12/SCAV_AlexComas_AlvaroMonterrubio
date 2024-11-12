@@ -143,5 +143,5 @@ Desviación en B: 0.423
 
 For the __Exercise 3__ we have performed a test consisting on resizing the image `Seminar_1\mbappe.jpg` , the result after performing this test is stored as `Seminar_1\mbappe_resized.jpg` and is the next one:
 
-![TEST ex 3, resized image] (https://github.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/blob/b613f0ed7218d0ee6663d725aa8e439b61df623d/Seminar_1/mbappe_resized.jpg)
+![TEST ex 3, resized image](https://raw.githubusercontent.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/b613f0ed7218d0ee6663d725aa8e439b61df623d/Seminar_1/mbappe_resized.jpg)
 
