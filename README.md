@@ -48,3 +48,5 @@ To test this method, we have used again the image `Seminar_1\mbappe.jpg`. Rememb
 ### S1 - Exercise 5.2
 ### S1 - Exercise 6
 ### S1 - Exercise 7
+### S1 - Exercise 8
+
