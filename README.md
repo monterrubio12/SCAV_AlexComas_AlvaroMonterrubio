@@ -32,8 +32,19 @@ In the third exercise of the seminar, we were asked to extend the class created 
 def resize(self, input, output, w, h):
         result = subprocess.run(["ffmpeg", "-i", input, "-vf", f"scale={w}:{h}", output],capture_output=True,text=True)
 ```
+To test this method, we have used the image `Seminar_1\mbappe.jpg`. The tests have been implemented in the final exercise of the seminar, so the result after runing this method will be presented and explained in the section __S1 - Exercise 8__.
+
 ### S1 - Exercise 4
+
 ### S1 - Exercise 5.1
+In the first part of the fifth exercise of the seminar, we were asked to extend again the class created in the exercise 2 by adding a new method. This method was designed to transform an image to black and white by means of __ffmpeg__. We have named this method `bw_converter()`. In order to execute this method, we have used again the `subprocess` module to run ffmpeg from our local terminal while executing the script from our IDE. The implementation of the method is as follows:
+
+```python
+def bw_converter(self,input,output):
+        result = subprocess.run(["ffmpeg", "-i", input, "-vf", "format=gray", output], capture_output=True, text=True)
+```
+To test this method, we have used again the image `Seminar_1\mbappe.jpg`. Remember taht the tests have been implemented in the final exercise of the seminar, so the result after runing this method on our input image will be presented and explained in the section __S1 - Exercise 8__.
+
 ### S1 - Exercise 5.2
 ### S1 - Exercise 6
 ### S1 - Exercise 7
