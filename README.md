@@ -26,6 +26,12 @@ def YUVtoRGB(self, Y, U, V):
         return R, G, B
 ```
 ### S1 - Exercise 3
+In the third exercise of the seminar, we were asked to extend the class created in the previous exercise by adding a new method. This method was designed to resize an image into a lower quality by means of __ffmpeg__. We have named this method `resize()`. In order to execute this method, we have used the `subprocess` module to run ffmpeg from our local terminal while executing the script from our IDE. The implementation of the method is as follows:
+
+```python
+def resize(self, input, output, w, h):
+        result = subprocess.run(["ffmpeg", "-i", input, "-vf", f"scale={w}:{h}", output],capture_output=True,text=True)
+```
 ### S1 - Exercise 4
 ### S1 - Exercise 5.1
 ### S1 - Exercise 5.2
