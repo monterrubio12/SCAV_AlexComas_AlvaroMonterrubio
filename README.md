@@ -90,4 +90,54 @@ class dwt_utils:
 The tests for this exercise have been also implemented in the final exercise of the seminar.
 
 ### S1 - Exercise 8
+Finaly, in the last exercise we were asked to cerate unit tests to our code, for each method and class.
+
+For the Exercise 2 we have performed a first test consisting on converting values from RGB to YUV, and also a second test consisting on converting values from YUV to RGB. The implementation of the test is as follows:
+
+```python
+print("Prueba RGB -> YUV:")
+r, g, b = 255, 0, 0  # Rojo puro
+Y, U, V = exercises.RGBtoYUV(r, g, b)
+print(f"RGB({r}, {g}, {b}) -> YUV({Y:.2f}, {U:.2f}, {V:.2f})")
+
+# Valores esperados para YUV
+expected_Y, expected_U, expected_V = 81.48, 90.44, 240.57
+
+# Calcular y mostrar desviación para YUV
+print("Desviaciones (YUV):")
+print(f"Desviación en Y: {Y - expected_Y:.3f}")
+print(f"Desviación en U: {U - expected_U:.3f}")
+print(f"Desviación en V: {V - expected_V:.3f}\n")
+
+# Probar YUV a RGB
+print("Prueba YUV -> RGB:")
+r_out, g_out, b_out = exercises.YUVtoRGB(expected_Y, expected_U, expected_V)
+print(f"YUV({expected_Y}, {expected_U}, {expected_V}) -> RGB({r_out:.2f}, {g_out:.2f}, {b_out:.2f})")
+
+# Valores esperados para RGB
+expected_r, expected_g, expected_b = 255, 0, 0
+
+# Calcular y mostrar desviación para RGB
+print("Desviaciones (RGB):")
+print(f"Desviación en R: {r_out - expected_r:.3f}")
+print(f"Desviación en G: {g_out - expected_g:.3f}")
+print(f"Desviación en B: {b_out - expected_b:.3f}")
+```
+The obtained output after runing the previous test using the methods implemented in Exercise 2 is the next one
+
+`
+Prueba RGB -> YUV:
+RGB(255, 0, 0) -> YUV(81.53, 90.26, 239.94)
+Desviaciones (YUV):
+Desviación en Y: 0.055
+Desviación en U: -0.180
+Desviación en V: -0.625
+
+Prueba YUV -> RGB:
+YUV(81.48, 90.44, 240.57) -> RGB(255.88, -0.61, 0.42)
+Desviaciones (RGB):
+Desviación en R: 0.880
+Desviación en G: -0.615
+Desviación en B: 0.423
+`
 
