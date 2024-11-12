@@ -145,3 +145,8 @@ For the __Exercise 3__ we have performed a test consisting on resizing the image
 
 ![TEST ex 3, resized image](https://raw.githubusercontent.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/b613f0ed7218d0ee6663d725aa8e439b61df623d/Seminar_1/mbappe_resized.jpg)
 
+For the __Exercise 4__ ....
+
+For the __Exercise 5.1__ we have performed a test consisting on transforming the image `Seminar_1\mbappe.jpg` to black and white, the result after performing this test is stored as `Seminar_1\mbappe_bw.jpg` and is the next one:
+
+![TEST ex 5.1, black and white image](https://raw.githubusercontent.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/blob/3681020f8aa2a0365a019102fb09fbdf6ab878a4/Seminar_1/mbappe_bw.jpg)
