@@ -34,24 +34,45 @@ class Exercises:
     
     #EXERCISE 4
     def serpentine(self, input):
-
-        img = Image.open(input)
-        w,h = img.size
-        file = open(input, 'rb')
-        data = file.read()
         serp_data = []
         
+        h = len(input)        #num_rows
+        w = len(input[0])     #num_cols
+        serp_data = []
+
+        #first column starting diagonals
         for i in range(h):
-            start = i*w #en cada fila avanzo un punto horizontalment par hacer diagonal
-            end = start + w
-            if(i%2 != 0):
-                for j in range(w - 1, -1, -1):
-                    serp_data.append(data[i* w + j])
-            else:
-                for j in range(w):
-                    serp_data.append(data[i* w + j])
-        
-        return bytes(serp_data)
+            row, col = i, 0
+            diagonal = []
+
+            while row >= 0 and col < w:
+                diagonal.append(input[row][col])
+                row -= 1
+                col += 1
+
+            # Invert diagonal if is odd
+            if i % 2 == 1:
+                diagonal.reverse()
+            
+            serp_data.append(diagonal)
+
+        # last row starting diagonals
+        for j in range(1, w): #start at 1 to avoid repeating the main diagonal
+            row, col = h - 1, j
+            diagonal = []
+
+            while row >= 0 and col < w:
+                diagonal.append(input[row][col])
+                row -= 1
+                col += 1
+            
+            #Invert diagonal if is odd
+            if (h + j - 1) % 2 == 1:
+                diagonal.reverse()
+
+            serp_data.append(diagonal)
+
+        return serp_data
 
 
     #EXERCISE 5.1
@@ -129,7 +150,21 @@ exercises.resize("Seminar_1/mbappe.jpg", "Seminar_1/mbappe_resized.jpg", 300, 30
 # EX4: Serpentine
 print()
 print("EXERCISE 4 TEST-----------------------------------------")
+matrix = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16]
+]
 
+print("Input Matrix:")
+for i in matrix:
+    print(i)
+
+results = exercises.serpentine(matrix)
+
+print("\nSerpentine reading output:")
+print(results)
 
 # EX5.1: Black & White
 exercises.bw_converter("Seminar_1/mbappe.jpg", "Seminar_1/mbappe_bw.jpg")

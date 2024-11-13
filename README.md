@@ -35,31 +35,51 @@ def resize(self, input, output, w, h):
 To test this method, we have used the image `Seminar_1\mbappe.jpg`. The tests have been implemented in the final exercise of the seminar, so the result after runing this method will be presented and explained in the section __S1 - Exercise 8__.
 
 ### S1 - Exercise 4
-For this exercise, we were asked to create a method called serpentine that reads the bytes of an image file in a "serpentine" pattern, where each row of pixels is read alternately from left to right and right to left, creating a zigzag effect. This method transforms the raw byte data of an image into a format that simulates this serpentine reading pattern.
-In order to obtain the desired result, we haver first of all load the Image using the PIL library to get its dimensions (width and height), then, read the byte data by reading the file in binary mode and process rows in zigzag pattern by using different for loops.
+For this exercise, we were asked to create a method called `serpentine()` that reads the componenets of a matrix in a "serpentine" pattern, where each row of pixels is read alternately from left to right and right to left, creating a zigzag effect. This method transforms the input matrix data into a format that simulates this serpentine reading pattern. To achieve the desired result, we first determine the dimensions of our input matrix (width and height), and after this, we use a combination of diferent loops to distinguish betwen even and odd diagonals to apply the zigzag effect when reading. The implementation of the method is as follows:
 
 ```python
     def serpentine(self, input):
-
-        img = Image.open(input)
-        w,h = img.size
-        file = open(input, 'rb')
-        data = file.read()
         serp_data = []
         
-        for i in range(h):
-            start = i*w #en cada fila avanzo un punto horizontalment par hacer diagonal
-            end = start + w
-            if(i%2 != 0):
-                for j in range(w - 1, -1, -1):
-                    serp_data.append(data[i* w + j])
-            else:
-                for j in range(w):
-                    serp_data.append(data[i* w + j])
-        
-        return bytes(serp_data)
-```
+        h = len(input)        #num_rows
+        w = len(input[0])     #num_cols
+        serp_data = []
 
+        #first column starting diagonals
+        for i in range(h):
+            row, col = i, 0
+            diagonal = []
+
+            while row >= 0 and col < w:
+                diagonal.append(input[row][col])
+                row -= 1
+                col += 1
+
+            # Invert diagonal if is odd
+            if i % 2 == 1:
+                diagonal.reverse()
+            
+            serp_data.append(diagonal)
+
+        # last row starting diagonals
+        for j in range(1, w): #start at 1 to avoid repeating the main diagonal
+            row, col = h - 1, j
+            diagonal = []
+
+            while row >= 0 and col < w:
+                diagonal.append(input[row][col])
+                row -= 1
+                col += 1
+            
+            #Invert diagonal if is odd
+            if (h + j - 1) % 2 == 1:
+                diagonal.reverse()
+
+            serp_data.append(diagonal)
+
+        return serp_data
+```
+The tests for this exercise have been implemented in the final exercise of the seminar.
 
 
 ### S1 - Exercise 5.1
@@ -171,7 +191,34 @@ For the __Exercise 3__ we have performed a test consisting on resizing the image
 
 ![TEST ex 3, resized image](https://github.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/blob/75a6a225929ff313138788b3db8fa41af26ca6cd/Seminar_1/mbappe_resized.jpg)
 
-For the __Exercise 4__ ....
+For the __Exercise 4__ we have performed a test to read the following matrix in a serpentine pattern.
+```
+[
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16]
+]
+```  
+To achive this we have used the implemented `serpentine()` method. The result after performing this test is `[[1], [2, 5], [9, 6, 3], [4, 7, 10, 13], [14, 11, 8], [12, 15], [16]]`, where we can observe that the matrix has been read following this zigzag pattern, alternating the direction of each diagonal. In order to perform this test we have implmented the next code:
+
+```python
+matrix = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16]
+]
+
+print("Input Matrix:")
+for i in matrix:
+    print(i)
+
+results = exercises.serpentine(matrix)
+
+print("\nSerpentine reading output:")
+print(results)
+```
 
 For the __Exercise 5.1__ we have performed a test consisting on transforming the image `Seminar_1\mbappe.jpg` to black and white, the result after performing this test is stored as `Seminar_1\mbappe_bw.jpg` and is the next one:
 
