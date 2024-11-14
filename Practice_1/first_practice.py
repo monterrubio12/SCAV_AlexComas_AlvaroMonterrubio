@@ -12,6 +12,8 @@ import numpy as np
 from scipy.fft import dct, idct
 import pywt
 import sys
+#API
+
 
 class Exercises:
 
