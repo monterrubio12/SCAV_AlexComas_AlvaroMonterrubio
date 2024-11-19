@@ -1,17 +1,15 @@
 FROM python:3.13
 
-
 WORKDIR /usr/src/app
 
-# Instalar las dependencias del requirements 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia el codigo al contenedor
+RUN apt-get update && apt-get install -y ffmpeg
+
 COPY . .
 
-# Usar puerto 8000 para la API
 EXPOSE 8000
 
-# Comando para iniciar la aplicación usando uvicorn
-CMD ["uvicorn", "main:app"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
