@@ -292,9 +292,11 @@ In the first exercise of this practice we had to crate the API and put it inside
 ### P1 - Exercise 2
 
 ### P1 - Exercise 3
-In this third execise we were asked to include in our new API all our previous work. In order to adapt the unit tests we were alowed to use the help of any AI. In order to adapt all our previous work we have created two main files inside the `Practice_1`directory. 
+In this third exercise, we were asked to integrate all of our previous work into the new API. To adapt our unit tests for this new setup, we were allowed to use the help of any AI tools. As part of the integration process, we created two main files inside the `Practice_1 directory`.
 
-The first file is `first_practice.py`, this file containes all the libraries imports and class definitions implemneted in the first seminar that we will use to run our unit tests. The implementation of this first file is as follows:
+The first file is `first_practice.py`. This file contains all the library imports and class definitions from the first seminar, which we will use to run our unit tests. These classes and methods were originally implemented to perform various tasks such as color space conversion (RGB to YUV and vice versa), image resizing, matrix transformations, and other utilities. The `first_practice.py` file serves to integrate this existing functionality into our new API, allowing us to call these functions using HTTP requests.
+
+The implementation of this first file is as follows:
 
 ```python
 from PIL import Image
@@ -391,8 +393,13 @@ class dwt_utils:
         return pywt.waverec2(coeffs, self.wavelet)
 
 ```
+The second file is test_main.py. In this file, we first of all import the classes and functions defined in the `first_practice.py` file. This allows us to reuse the existing code from our previous work in the new API. After the necessary imports, we initialize the FastAPI application, which acts as the foundation for our API.
 
-The second file is `test_main.py`. In this file we first of all import the classes defined in the `first_practice.py`file and after that we initialize the API and we implement the necessary codes to run the different unit tests in our API using endpoints. The code that we hav implemented is as follows:
+In this file, we also define the various endpoints required to run the different unit tests. Each endpoint is associated with a specific function from the `first_practice.py` file, which we test through HTTP requests. This design allows us to interact with the methods already implemented (RGB to YUV conversion, image resizing, matrix transformations, etc) and verify that they work correctly through the API.
+
+By running these tests through the API, we ensure that each function performs as expected when called remotely. This also facilitates easy testing and allows us to have a more organized and manageable code.
+
+The code we have implemented is as follows:
 
 ```python
 rom fastapi import FastAPI
