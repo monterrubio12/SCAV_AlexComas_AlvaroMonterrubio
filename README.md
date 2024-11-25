@@ -322,7 +322,7 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 ### P1 - Exercise 2
-
+As it's possible to observe in the previous lines of code, we have added some comands to run FFMPEG. With the RUN apt-get update, we ensure that we have the latest version of FFPMEG, and with the apt-get install -y, the docker process the action of installing the FFMPEG automatically.
 
 
 ### P1 - Exercise 3
