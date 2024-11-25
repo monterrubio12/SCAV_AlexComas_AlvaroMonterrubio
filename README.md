@@ -287,9 +287,43 @@ During this first practice on video coding in the SCAV course, we are going to c
 By the end of this practice, we will have a Dockerized environment ensuring that the application runs smoothly across different platforms. This will allow us to deploy the API in a consistent and isolated environment, making it easier to manage dependencies and facilitate collaboration.
 
 ### P1 - Exercise 1
-In the first exercise of this practice we had to crate the API and put it inside a Docker. To do this, we first of all create a 
+In the first exercise of this practice we had to crate the API and put it inside a Docker. To do this, we first of all create a main.py, which is the main core of the api, where we are going to define the calls and endpoints. We are using the FastAPI as API for this practice after seeing that could be the easiest option for us without knowldege of APIS.
+Inside the main, we are importing the fastapi and Exercises, the class which contain all the exercises or methods from the previous seminar.
+Then, from here, we create the "app", which is usually used inside the main file as the instance of FastAPI. After defining the app, we created an instance of the Exercises class, named exercise, which contains all the methods implemented in the previous seminar.
+
+```from fastapi import FastAPI
+from first_practice import Exercises
+
+app = FastAPI()
+exercise = Exercises()
+
+@app.get("/")
+async def root():
+    return {"message": "Practice 1 by Alex Comas & Alvaro Monterrubio"}
+```
+
+Once the setup was ready, we started by defining the root endpoint ("/") using the @app.get decorator. This is a simple endpoint that returns a welcome message and provides basic information about the practice. Then, in the next exercises, we will define some more endpoints.
+Then, we have created the requirements.txt and Dockerfile. Inside the requirements file, we list all the necessary Python dependencies for our API, and inside the coker file, we containerize the application, with the python version, directory, the requeirements previously mentioned, FFMPEG...
+
+```FROM python:3.13
+
+WORKDIR /usr/src/app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN apt-get update && apt-get install -y ffmpeg
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
 
 ### P1 - Exercise 2
+
+
 
 ### P1 - Exercise 3
 In this third exercise, we were asked to integrate all of our previous work into the new API. To adapt our unit tests for this new setup, we were allowed to use the help of any AI tools. As part of the integration process, we created two main files inside the `Practice_1 directory`.
