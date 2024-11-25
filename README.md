@@ -281,3 +281,236 @@ else:
     print("\nTest failed: Decoded output does not match the original input.")
 ```
 
+## Practice_1
+During this first practice on video coding in the SCAV course, we are going to create an API and containerizing it using Docker. For this task, we will use FastAPI that is a modern web framework for building APIs with Python. We will build a API serving for several purposes, and we will implement some endpoinds that will be used to process some actions of the first seminar. These endpoints will be designed to process video data, perform encoding or decoding tasks, and interact with other components introduced during the first seminar.
+
+By the end of this practice, we will have a Dockerized environment ensuring that the application runs smoothly across different platforms. This will allow us to deploy the API in a consistent and isolated environment, making it easier to manage dependencies and facilitate collaboration.
+
+### P1 - Exercise 1
+In the first exercise of this practice we had to crate the API and put it inside a Docker. To do this, we first of all create a 
+
+### P1 - Exercise 2
+
+### P1 - Exercise 3
+In this third execise we were asked to include in our new API all our previous work. In order to adapt the unit tests we were alowed to use the help of any AI. In order to adapt all our previous work we have created two main files inside the `Practice_1`directory. 
+
+The first file is `first_practice.py`, this file containes all the libraries imports and class definitions implemneted in the first seminar that we will use to run our unit tests. The implementation of this first file is as follows:
+
+```python
+from PIL import Image
+from typing import Iterator, Tuple, List
+from itertools import groupby
+import os
+import subprocess
+import numpy as np
+from scipy.fft import dct, idct
+import pywt
+
+class Exercises:
+    # Conversion RGB <-> YUV
+    def RGBtoYUV(self, r, g, b):
+        Y = 0.257 * r + 0.504 * g + 0.098 * b + 16
+        U = -0.148 * r - 0.291 * g + 0.439 * b + 128
+        V = 0.439 * r - 0.368 * g - 0.071 * b + 128
+        return Y, U, V
+
+    def YUVtoRGB(self, Y, U, V):
+        R = 1.164 * (Y - 16) + 1.596 * (V - 128)
+        G = 1.164 * (Y - 16) - 0.813 * (V - 128) - 0.391 * (U - 128)
+        B = 1.164 * (Y - 16) + 2.018 * (U - 128)
+        return R, G, B
+
+    # Redimensionar un video usando FFMPEG
+    def resize(self, input, output, w, h):
+        result = subprocess.run(
+            ["ffmpeg", "-i", input, "-vf", f"scale={w}:{h}", output],
+            capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"FFMPEG error: {result.stderr}")
+
+    # Lectura en serpentina de matrices
+    def serpentine(self, input):
+        serp_data = []
+        h = len(input)
+        w = len(input[0])
+
+        for i in range(h):
+            row, col = i, 0
+            diagonal = []
+            while row >= 0 and col < w:
+                diagonal.append(input[row][col])
+                row -= 1
+                col += 1
+            if i % 2 == 1:
+                diagonal.reverse()
+            serp_data.append(diagonal)
+
+        for j in range(1, w):
+            row, col = h - 1, j
+            diagonal = []
+            while row >= 0 and col < w:
+                diagonal.append(input[row][col])
+                row -= 1
+                col += 1
+            if (h + j - 1) % 2 == 1:
+                diagonal.reverse()
+            serp_data.append(diagonal)
+
+        return serp_data
+
+    # Conversión a blanco y negro usando FFMPEG
+    def bw_converter(self, input, output):
+        result = subprocess.run(
+            ["ffmpeg", "-i", input, "-vf", "format=gray", output],
+            capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"FFMPEG error: {result.stderr}")
+
+    # Codificación Run-Length
+    def run_length_encode(self, data: List[int]) -> Iterator[Tuple[int, int]]:
+        return ((x, sum(1 for _ in y)) for x, y in groupby(data))
+
+class dct_utils:
+    def dct_converter(self, a):
+        return dct(dct(a.T, norm='ortho').T, norm='ortho')
+
+    def dct_decoder(self, a):
+        return idct(idct(a.T, norm='ortho').T, norm='ortho')
+
+class dwt_utils:
+    def __init__(self, wavelet='haar', level=1):
+        self.wavelet = wavelet
+        self.level = level
+    
+    def transform(self, data):
+        return pywt.wavedec2(data, self.wavelet, level=self.level)
+    
+    def inverse_transform(self, coeffs):
+        return pywt.waverec2(coeffs, self.wavelet)
+
+```
+
+The second file is `test_main.py`. In this file we first of all import the classes defined in the `first_practice.py`file and after that we initialize the API and we implement the necessary codes to run the different unit tests in our API using endpoints. The code that we hav implemented is as follows:
+
+```python
+rom fastapi import FastAPI
+from first_practice import Exercises, dct_utils, dwt_utils
+import numpy as np
+
+app = FastAPI()
+exercise = Exercises()
+dct_utils_instance = dct_utils()
+dwt_utils_instance = dwt_utils()
+
+@app.get("/")
+async def root():
+    return {"message": "Testing FastAPI Endpoints"}
+
+@app.get("/test_rgb_to_yuv/")
+async def test_rgb_to_yuv():
+    r, g, b = 255, 0, 0  # Red
+    Y, U, V = exercise.RGBtoYUV(r, g, b)
+    expected_Y, expected_U, expected_V = 81.48, 90.44, 240.57
+    
+    deviations = {
+        "Y_deviation": Y - expected_Y,
+        "U_deviation": U - expected_U,
+        "V_deviation": V - expected_V
+    }
+    
+    return {
+        "input_rgb": {"r": r, "g": g, "b": b},
+        "output_yuv": {"Y": round(Y, 2), "U": round(U, 2), "V": round(V, 2)},
+        "deviations": deviations
+    }
+
+@app.get("/test_yuv_to_rgb/")
+async def test_yuv_to_rgb():
+    Y, U, V = 81.48, 90.44, 240.57  # Expected YUV for Red
+    r, g, b = exercise.YUVtoRGB(Y, U, V)
+    expected_r, expected_g, expected_b = 255, 0, 0
+    
+    deviations = {
+        "R_deviation": r - expected_r,
+        "G_deviation": g - expected_g,
+        "B_deviation": b - expected_b
+    }
+
+    return {
+        "input_yuv": {"Y": Y, "U": U, "V": V},
+        "output_rgb": {"r": round(r), "g": round(g), "b": round(b)},
+        "deviations": deviations
+    }
+
+@app.get("/test_serpentine/")
+async def test_serpentine():
+    matrix = [
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [13, 14, 15, 16]
+    ]
+    result = exercise.serpentine(matrix)
+    return {
+        "input_matrix": matrix,
+        "serpentine_output": result
+    }
+
+@app.get("/test_resize/")
+async def test_resize():
+    try:
+        exercise.resize("../Practice_1/mbappe.jpg", "../Practice_1/mbappe_resized.jpg", 300, 300)
+        return {"message": "Resize test passed."}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/test_bw_converter/")
+async def test_bw_converter():
+    try:
+        exercise.bw_converter("../Practice_1/mbappe.jpg", "../Practice_1/mbappe_bw.jpg")
+        return {"message": "Black & White conversion test passed."}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/test_run_length_encoding/")
+async def test_run_length_encoding():
+    aux = [1, 1, 3, 3, 4, 4, 5, 6]
+    encoded = list(exercise.run_length_encode(aux))
+    return {
+        "input_array": aux,
+        "encoded_array": encoded
+    }
+
+@app.get("/test_dct_encoding/")
+async def test_dct_encoding():
+    input_data = np.array([[1, 2, 3, 4, 5, 6]], dtype=float)
+    dct_encoded = dct_utils_instance.dct_converter(input_data)
+    decoded_output = dct_utils_instance.dct_decoder(dct_encoded)
+    
+    passed = np.allclose(decoded_output, input_data, atol=1e-6)
+    
+    return {
+        "input_array": input_data.tolist(),
+        "dct_encoded_output": dct_encoded.tolist(),
+        "decoded_output": decoded_output.tolist(),
+        "test_passed": passed
+    }
+
+@app.get("/test_dwt_encoding/")
+async def test_dwt_encoding():
+    input_data = np.array([[1, 2, 3, 4], [5, 6, 7, 8]], dtype=float)
+    transformed_data = dwt_utils_instance.transform(input_data)
+    reconstructed_data = dwt_utils_instance.inverse_transform(transformed_data)
+    
+    passed = np.allclose(reconstructed_data, input_data, atol=1e-6)
+    
+    return {
+        "input_array": input_data.tolist(),
+        "transformed_data": transformed_data,
+        "reconstructed_data": reconstructed_data.tolist(),
+        "test_passed": passed
+    }
+
+```
