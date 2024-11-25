@@ -393,7 +393,7 @@ class dwt_utils:
         return pywt.waverec2(coeffs, self.wavelet)
 
 ```
-The second file is test_main.py. In this file, we first of all import the classes and functions defined in the `first_practice.py` file. This allows us to reuse the existing code from our previous work in the new API. After the necessary imports, we initialize the FastAPI application, which acts as the foundation for our API.
+The second file is `test_main.py`. In this file, we first of all import the classes and functions defined in the `first_practice.py` file. This allows us to reuse the existing code from our previous work in the new API. After the necessary imports, we initialize the FastAPI application, which acts as the foundation for our API.
 
 In this file, we also define the various endpoints required to run the different unit tests. Each endpoint is associated with a specific function from the `first_practice.py` file, which we test through HTTP requests. This design allows us to interact with the methods already implemented (RGB to YUV conversion, image resizing, matrix transformations, etc) and verify that they work correctly through the API.
 
@@ -521,3 +521,42 @@ async def test_dwt_encoding():
     }
 
 ```
+### P1 - Exercise 4
+In the fourth exercise of this practice, we were asked to create at least two endpoints which will process some actions from the previous S1. As we have already explained, in exrecise 3, we have implmented the required endpoints to run the unit tests for our API. These tests were defined in the `test_main.py`` file. In order to ensure that the tests works we need to link this file to the `main.py` file. This simplify all the structure of the application.
+
+To achieve this, we imported the `test_main.py` file into `main.py`. Then, we created the FastAPI application and mounted the test functions to the API. This allows the API to use requests for running the unit tests and ensures that everything is properly connected. This linking between the two files, ensure a smooth conection from the API to the test functions, making it easier to execute and monitor the results of the tests.
+
+The implementation of the main.py` to link it with `test_main.py` and run the endpoints is as follows:
+
+```python
+from fastapi import FastAPI
+from test_main import app as test_app
+
+app = FastAPI()
+app.mount("/test", test_app)
+
+@app.get("/")
+async def root():
+    return {"message": "Practice 1 by Alex Comas & Alvaro Monterrubio"}
+```
+
+Also, in the `main.py` file, we have included some instrucctions defining the endpoints that need to be tested and how to execute them. These instructions define the necessary routes to run the different unit tests that have been defined in the API. Each test corresponds to a specific functionality from the previous exercises and is accessible through a dedicated endpoint.
+
+The following instructions are the routes defining the endpoints and the corresponding tests you can run:
+
+```
+#HACER TEST CON ENDPOINTS:
+
+#Test RGB to YUV: /test/test_rgb_to_yuv/
+##Test YUV to RGB: /test/test_yuv_to_rgb/
+#Test Serpentine: /test/test_serpentine/
+#Test Resize: /test/test_resize/
+#Test Black & White Conversion: /test/test_bw_converter/
+#Test Run-Length Encoding: /test/test_run_length_encoding/
+#Test DCT Encoding: /test/test_dct_encoding/
+#Test DWT Encoding: /test/test_dwt_encoding/
+```
+
+In order to answer in more detail we are going to include two of the endpoints implemnetations done in `test_main.py` file with some explanationto understan better how they work. 
+
+
