@@ -7,7 +7,7 @@ During this first seminar on video coding in the SCAV course, we will implement 
 ### S1 - Exercise 1
 In the first exercise of this first seminar, we were asked to compile and install the lastest version of __ffmpeg__ on our laptop/desktop (or any other device) using the command line. We needed to ensure that all necessary recent libraries were installed as part of the process. After the installation, in order to prove that the ffmpeg was succesfully installed, we were asked to run in our terminal the comand `ffmpeg` and upload a screenshot of the result. The screenshot that we obtained is the next one:
 
-![Screenshot Ex1](https://github.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/blob/2748a33599088e10138ca5b1a59571b14633d13f/Seminar_1/mbappe_bw.jpg)
+![Screenshot Ex1](https://github.com/monterrubio12/SCAV_AlexComas_AlvaroMonterrubio/blob/main/Seminar_1/unnamed-3.png)
 
 
 ### S1 - Exercise 2
