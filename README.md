@@ -555,6 +555,13 @@ async def test_dwt_encoding():
     }
 
 ```
+
+In order to run the docker and API, we are going to use the following comands in the terminal:
+
+```
+docker run -d -p 8000:8000 practice1-app
+uvicorn main:app --reload
+``
 ### P1 - Exercise 4
 In the fourth exercise of this practice, we were asked to create at least two endpoints which will process some actions from the previous S1. As we have already explained, in exrecise 3, we have implmented the required endpoints to run the unit tests for our API. These tests were defined in the `test_main.py`` file. In order to ensure that the tests works we need to link this file to the `main.py` file. This simplify all the structure of the application.
 
