@@ -6,7 +6,7 @@ app.mount("/test", test_app)
 
 @app.get("/")
 async def root():
-    return {"message": "Practice 1 by Alex Comas & Alvaro Monterrubio"}
+    return {"message": "Seminar 2 by Alex Comas & Alvaro Monterrubio"}
 
 
 #HACER TEST CON ENDPOINTS:

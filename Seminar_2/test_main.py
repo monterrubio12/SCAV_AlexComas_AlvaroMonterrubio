@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from second import Exercises, dct_utils, dwt_utils
+from second_seminar import Exercises, dct_utils, dwt_utils
 import numpy as np
 
 app = FastAPI()

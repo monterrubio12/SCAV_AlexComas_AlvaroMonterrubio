@@ -91,9 +91,8 @@ class dwt_utils:
     def inverse_transform(self, coeffs):
         return pywt.waverec2(coeffs, self.wavelet)
 
-class ffmpeg_utils_comas_alvaro:
+class ffmpeg_utils_comas_alvaro: 
     def resolution_adaptor(input_file, width, height, output_file):
-        '''insert here the function'''
         subprocess.run(
             ["ffmpeg", "-i", input_file, "-vf", f"scale={width}:{height}", output_file],
             check=True
@@ -101,26 +100,25 @@ class ffmpeg_utils_comas_alvaro:
         return output_file
 
     def chroma_subsampling(input_file, output_file, pix_fmt):
-
-        import subprocess
         subprocess.run(
-            '''Pix format debe ser tipo yuv420, yuv422...'''
+            #Pix format debe ser tipo yuv420, yuv422...
             ["ffmpeg", "-i", input_file, "-c:v", "libx264", "-pix_fmt", pix_fmt, output_file],
             check=True
 
         )
         return output_file
 
+    def get_metadata(input_file, metadata_file):
+        subprocess.run(
+            ["ffmpeg", "-i", input_file, "-f", "ffmetadata", metadata_file],
+            check=True
+        )
 
-    def get_metadata():
-        ''' TO DO: Elegir la metadata que queremos sacar y hacer subrpocess'''
-    
     def bbb_editor(input_file, output_dir):
         '''TO DO: Del input file exportar la info que se pide en contenedor'''
         
     
-    def mp4_reader():
-        ''' MAS DE LO MISMO '''
+    def mp4_reader(input_file):
         result = subprocess.run(
             ["ffprobe", "-i", input_file, "-show_streams", "-select_streams", "v,a", "-v", "error"],
             stdout=subprocess.PIPE,
@@ -128,10 +126,8 @@ class ffmpeg_utils_comas_alvaro:
             text=True,
             check=True,
         )
-    
-    # Count the number of "Stream #" occurrences in the output
-    track_count = result.stdout.count("Stream #")
-    return track_count
+        track_count = result.stdout.count("Stream #")
+        return track_count
 
     def video_macroblocks(input_file,output_file):
         subprocess.run(
@@ -141,7 +137,7 @@ class ffmpeg_utils_comas_alvaro:
             output_file
         ],
         check=True
-    )
+        )
 
     def yuv_histogram(input_file):
         subprocess.run(
