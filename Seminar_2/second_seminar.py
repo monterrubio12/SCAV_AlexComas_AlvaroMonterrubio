@@ -113,16 +113,41 @@ class ffmpeg_utils_comas_alvaro:
 
 
     def get_metadata():
-        ''' IGUAL AQUÍ'''
+        ''' TO DO: Elegir la metadata que queremos sacar y hacer subrpocess'''
     
-    def bbb_editor():
-        '''MAS DE LO MISMO'''
-        #CUT VIDEO ffmpeg -i input.mp4 -ss 00:05:20 -t 00:10:00 -c:v copy -c:a copy output1.mp4
+    def bbb_editor(input_file, output_dir):
+        '''TO DO: Del input file exportar la info que se pide en contenedor'''
         
     
     def mp4_reader():
         ''' MAS DE LO MISMO '''
-    def video_macroblocks():
-        '''etc'''
-    def yuv_histogram():
-        '''etc'''
+        result = subprocess.run(
+            ["ffprobe", "-i", input_file, "-show_streams", "-select_streams", "v,a", "-v", "error"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True,
+        )
+    
+    # Count the number of "Stream #" occurrences in the output
+    track_count = result.stdout.count("Stream #")
+    return track_count
+
+    def video_macroblocks(input_file,output_file):
+        subprocess.run(
+        [
+            "ffmpeg", "-flags2", "+export_mvs", "-i", input_file, 
+            "-vf", "codecview=mv=pf+bf+bb",  # Show motion vectors and macroblocks
+            output_file
+        ],
+        check=True
+    )
+
+    def yuv_histogram(input_file):
+        subprocess.run(
+            [
+                "ffplay", input_file, 
+                "-vf", "split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay"  # Apply histogram filter
+            ],
+            check=True
+        )
