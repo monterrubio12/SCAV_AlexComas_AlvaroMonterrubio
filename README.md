@@ -664,3 +664,24 @@ return {
     "final_container": final_output # Path to the final .mp4 container with video and all audio tracks
 }
 ```
+
+### S2 - Exercise 5
+
+### S2 - Exercise 6
+For this exercise, we are going to extract macroblocks and motion vectors from a video using FFMPEG. The function takes an input file (the video to process) and an output file path (where the processed video will be saved). 
+As in the previous exercises, We start by defining the input video file (input_file) and the output file (output_file) where the processed video will be saved. These paths are provided as arguments when the function is called.
+Then, by testing with different bbb videos, we noticed that H.264 codec requires the video dimensions (width and height) to be divisible by 2. If the video dimensions are odd, FFMPEG could throw an error or not process the video correctly. To address this, the function scales the video using the following FFMPEG filter:
+```"scale=trunc(iw/2)*2:trunc(ih/2)*2"```
+With this, we can run the FFMPEG comand with subprocess.run. This command processes the video and saves the output with the motion vectors and macroblocks shown:
+```
+subprocess.run(
+    [
+        "ffmpeg", "-flags2", "+export_mvs", "-i", input_file, 
+        "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,codecview=mv=pf+bf+bb",  
+        output_file
+    ],
+    check=True
+)
+```
+
+
