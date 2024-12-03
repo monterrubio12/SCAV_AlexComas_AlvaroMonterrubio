@@ -600,4 +600,67 @@ The following instructions are the routes defining the endpoints and the corresp
 
 In order to answer in more detail we are going to include two of the endpoints implemnetations done in `test_main.py` file with some explanationto understan better how they work. 
 
+## Seminar 2
+For this second seminar, we are going to continue working with APIS and FFMPEG calls, working with the Big Buck Bunny. Most (if not all) of the comands used in this seminar are taken from the FFMPEG documentation.
 
+### S2 - Exercise 1
+For this first exercise we are going to modify the resolution of the video by using a FFMPEG comand:
+```
+def resolution_adaptor(self, input_file, width, height, output_file):
+        subprocess.run(
+            ["ffmpeg", "-i", input_file, "-vf", f"scale={width}:{height}", output_file],
+            check=True
+        )
+        return output_file
+```
+Basically, given a new width and height, and an output and input file path, we are using a FFMPEG comand to resize the video.
+
+### S2 - Exercise 2
+For the second exercise, we are asked to modify the chroma subsampling. As in the previous exercise, given some inputs (input and ouput file path, and the new format), we return the new file with the chroma subsampling:
+```
+    def chroma_subsampling(self, input_file, output_file, pix_fmt):
+        subprocess.run(
+            #Pix format debe ser tipo yuv420, yuv422...
+            ["ffmpeg", "-i", input_file, "-c:v", "libx264", "-pix_fmt", pix_fmt, output_file],
+            check=True
+
+        )
+```
+
+### S2 - Exercise 3
+
+### S2 - Exercise 4
+For this fourth exercise, we are going to cut and export the bbb video in some different formats. First of all, the function asks for a input and output file paths. Then, we start by defining the name of the files that we are going to create later and we start to run some commands for the asked questions:
+1. Cut the 20 seconds clip: We use a FFMPEG comand to to this and store it as mp4 file
+```
+subprocess.run(["ffmpeg", "-i", input_file, "-ss", "00:00:00", "-t", "20", "-c:v", "copy", "-c:a", "copy", video_20s], check=True)
+```
+2. We export the audio tracks in some different formats:
+```
+            subprocess.run(["ffmpeg", "-i", video_20s, "-ac", "1", "-c:a", "aac", audio_aac], check=True)
+            subprocess.run(["ffmpeg", "-i", video_20s, "-ac", "2", "-c:a", "libmp3lame", "-b:a", "128k", audio_mp3], check=True)
+            subprocess.run(["ffmpeg", "-i", video_20s, "-c:a", "ac3", audio_ac3], check=True)
+```
+3. We package the previous information inside a MP4 container, were we combine the 20-second video and all the generated audio tracks into a final .mp4 container (bbb_final_container.mp4), maintaining the original video quality.
+```
+subprocess.run(
+                [
+                    "ffmpeg", "-i", video_20s, "-i", audio_aac, "-i", audio_mp3, "-i", audio_ac3,
+                    "-map", "0:v:0", "-map", "1:a:0", "-map", "2:a:0", "-map", "3:a:0",
+                    "-c:v", "copy", "-c:a", "copy", final_output
+                ],
+                check=True
+            )
+```
+
+Finally, we do a return statement that creates a dictionary with key-value pairs, where the keys are descriptive labels and the values are the paths to the generated output files:
+
+```
+return {
+    "video_20s": video_20s,        # Path to the 20-second video clip
+    "audio_aac": audio_aac,        # Path to the AAC mono audio file
+    "audio_mp3": audio_mp3,        # Path to the MP3 stereo audio file
+    "audio_ac3": audio_ac3,        # Path to the AC3 audio file
+    "final_container": final_output # Path to the final .mp4 container with video and all audio tracks
+}
+```
