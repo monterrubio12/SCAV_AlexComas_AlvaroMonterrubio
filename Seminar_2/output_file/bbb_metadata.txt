@@ -1,0 +1,18 @@
+;FFMETADATA1
+major_brand=qt  
+minor_version=537199360
+compatible_brands=qt  
+timecode=00:00:00:00
+com.apple.quicktime.player.movie.audio.gain=1.000000
+com.apple.quicktime.player.movie.audio.treble=0.000000
+com.apple.quicktime.player.movie.audio.bass=0.000000
+com.apple.quicktime.player.movie.audio.balance=0.000000
+com.apple.quicktime.player.movie.audio.pitchshift=0.000000
+com.apple.quicktime.player.movie.audio.mute=
+com.apple.quicktime.player.movie.visual.brightness=0.000000
+com.apple.quicktime.player.movie.visual.color=1.000000
+com.apple.quicktime.player.movie.visual.tint=0.000000
+com.apple.quicktime.player.movie.visual.contrast=1.000000
+com.apple.quicktime.player.version=7.4.1 (14)
+com.apple.quicktime.version=7.4.1 (14) 0x7418000 (Mac OS X, 10.5.2, 9C31)
+encoder=Lavf61.7.100
