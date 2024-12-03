@@ -45,6 +45,67 @@ class TestFFmpegUtils(unittest.TestCase):
             check=True
         )
 
+
+    @patch('subprocess.run')
+    def test_bbb_editor(self, mock_run):
+        # Mock del entorno y de los paths
+        mock_run.return_value = None  # Simular que todos los comandos se ejecutan correctamente
+        output_dir = "output_directory"
+        input_file = "input.mp4"
+        
+        # Crear instancia y llamar al método
+        utils = ffmpeg_utils_comas_alvaro()
+        result = utils.bbb_editor(input_file, output_dir)
+        
+        # Verificar múltiples llamadas de subprocess.run
+        expected_calls = [
+            # Primer comando (20 segundos de video)
+            [
+                "ffmpeg", "-i", input_file, "-ss", "00:00:00", "-t", "20", "-c:v", "copy", "-c:a", "copy", 
+                f"{output_dir}/bbb_20s.mp4"
+            ],
+            # Segundo comando (AAC audio)
+            [
+                "ffmpeg", "-i", f"{output_dir}/bbb_20s.mp4", "-ac", "1", "-c:a", "aac", 
+                f"{output_dir}/bbb_20s_aac.m4a"
+            ],
+            # Tercer comando (MP3 audio)
+            [
+                "ffmpeg", "-i", f"{output_dir}/bbb_20s.mp4", "-ac", "2", "-c:a", "libmp3lame", "-b:a", "128k", 
+                f"{output_dir}/bbb_20s_mp3.mp3"
+            ],
+            # Cuarto comando (AC3 audio)
+            [
+                "ffmpeg", "-i", f"{output_dir}/bbb_20s.mp4", "-c:a", "ac3", 
+                f"{output_dir}/bbb_20s_ac3.ac3"
+            ],
+            # Quinto comando (empaquetar todos)
+            [
+                "ffmpeg", 
+                "-i", f"{output_dir}/bbb_20s.mp4", 
+                "-i", f"{output_dir}/bbb_20s_aac.m4a", 
+                "-i", f"{output_dir}/bbb_20s_mp3.mp3", 
+                "-i", f"{output_dir}/bbb_20s_ac3.ac3",
+                "-map", "0:v:0", "-map", "1:a:0", "-map", "2:a:0", "-map", "3:a:0",
+                "-c:v", "copy", "-c:a", "copy", 
+                f"{output_dir}/bbb_final_container.mp4"
+            ]
+        ]
+
+        for call_args in expected_calls:
+            mock_run.assert_any_call(call_args, check=True)
+        
+        # Comprobar los resultados retornados
+        self.assertEqual(result, {
+            "video_20s": f"{output_dir}/bbb_20s.mp4",
+            "audio_aac": f"{output_dir}/bbb_20s_aac.m4a",
+            "audio_mp3": f"{output_dir}/bbb_20s_mp3.mp3",
+            "audio_ac3": f"{output_dir}/bbb_20s_ac3.ac3",
+            "final_container": f"{output_dir}/bbb_final_container.mp4"
+        })
+
+        
+
     @patch('subprocess.run')
     def test_video_macroblocks(self, mock_run):
         # Llamada al método
@@ -54,7 +115,8 @@ class TestFFmpegUtils(unittest.TestCase):
         mock_run.assert_called_once_with(
             [
                 "ffmpeg", "-flags2", "+export_mvs", "-i", "input.mp4", 
-                "-vf", "codecview=mv=pf+bf+bb", "output.mp4"
+                "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,codecview=mv=pf+bf+bb", 
+                "output.mp4"
             ],
             check=True
         )
@@ -62,13 +124,15 @@ class TestFFmpegUtils(unittest.TestCase):
     @patch('subprocess.run')
     def test_yuv_histogram(self, mock_run):
         # Llamada al método
-        ffmpeg_utils_comas_alvaro.yuv_histogram(self,"input.mp4")
+        ffmpeg_utils_comas_alvaro.yuv_histogram(self,"input.mp4","output.mp4")
         
         # Verificar que subprocess.run se haya llamado con los argumentos correctos
         mock_run.assert_called_once_with(
             [
-                "ffplay", "input.mp4", 
-                "-vf", "split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay"
+                "ffmpeg", 
+                "-i", "input.mp4", 
+                "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay", 
+                "output.mp4"
             ],
             check=True
         )

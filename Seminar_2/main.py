@@ -25,6 +25,7 @@ async def root():
 #Test resolution adaptor: /test/test_resolution_adaptor/?width=1280&height=720"
 #Test chroma subsampling: /test/test_chroma_subsampling/?pix_fmt=yuv420p"
 #Test get metadata: /test/test_get_metadata/"
+#Test bbb_editor: /test/test_bbb_editor/"
 #Test mp4 reader: /test/test_mp4_reader/"
 #Test macro blocks: /test/test_video_macroblocks/"
 #Test yuv histogram: /test/test_yuv_histogram/"

@@ -183,9 +183,24 @@ async def test_video_macroblocks():
 @app.get("/test_yuv_histogram/")
 async def test_yuv_histogram():
     input_path = f"../Seminar_2/input_file/bbb.mov"
+    output_file = "bbb_with_yuv.mp4"
+    output_path = f"../Seminar_2/output_file/{output_file}"
 
     try:
-        ffmpeg_utils.yuv_histogram(input_path)
+        ffmpeg_utils.yuv_histogram(input_path,output_path)
         return {"message": "YUV histogram applied and video played successfully", "input_file": input_path}
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@app.get("/test_bbb_editor/")
+async def test_bbb_editor():
+    input_path = "../Seminar_2/input_file/bbb.mov"  
+    output_dir = "../Seminar_2/output_file/"       
+
+    try:
+        # Llamar a la función `bbb_editor` con los argumentos requeridos
+        result = ffmpeg_utils.bbb_editor(input_path, output_dir)
+        return {"message": "BBB container created successfully", "output_files": result}
     except Exception as e:
         return {"error": str(e)}

@@ -115,7 +115,39 @@ class ffmpeg_utils_comas_alvaro:
         )
 
     def bbb_editor(self,input_file, output_dir):
-        '''TO DO: Del input file exportar la info que se pide en contenedor'''
+        import os
+        import subprocess
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Definimos los paths que usaremos para exportar los diferentes formatos
+        video_20s = os.path.join(output_dir, "bbb_20s.mp4")
+        audio_aac = os.path.join(output_dir, "bbb_20s_aac.m4a")
+        audio_mp3 = os.path.join(output_dir, "bbb_20s_mp3.mp3")
+        audio_ac3 = os.path.join(output_dir, "bbb_20s_ac3.ac3")
+        final_output = os.path.join(output_dir, "bbb_final_container.mp4")
+
+        # Comandos FFMPEG, en el último empaquetamos todo
+        subprocess.run(["ffmpeg", "-i", input_file, "-ss", "00:00:00", "-t", "20", "-c:v", "copy", "-c:a", "copy", video_20s], check=True)
+        subprocess.run(["ffmpeg", "-i", video_20s, "-ac", "1", "-c:a", "aac", audio_aac], check=True)
+        subprocess.run(["ffmpeg", "-i", video_20s, "-ac", "2", "-c:a", "libmp3lame", "-b:a", "128k", audio_mp3], check=True)
+        subprocess.run(["ffmpeg", "-i", video_20s, "-c:a", "ac3", audio_ac3], check=True)
+        subprocess.run(
+            [
+                "ffmpeg", "-i", video_20s, "-i", audio_aac, "-i", audio_mp3, "-i", audio_ac3,
+                "-map", "0:v:0", "-map", "1:a:0", "-map", "2:a:0", "-map", "3:a:0",
+                "-c:v", "copy", "-c:a", "copy", final_output
+            ],
+            check=True
+        )
+
+        return {
+            "video_20s": video_20s,
+            "audio_aac": audio_aac,
+            "audio_mp3": audio_mp3,
+            "audio_ac3": audio_ac3,
+            "final_container": final_output
+        }
         
     
     def mp4_reader(self,input_file):
@@ -133,17 +165,19 @@ class ffmpeg_utils_comas_alvaro:
         subprocess.run(
         [
             "ffmpeg", "-flags2", "+export_mvs", "-i", input_file, 
-            "-vf", "codecview=mv=pf+bf+bb",  # Show motion vectors and macroblocks
+            "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,codecview=mv=pf+bf+bb",  # Show motion vectors and macroblocks. we have used CHATGPT to rescale in orther to work with all video sizes (problems with H264)
             output_file
         ],
         check=True
         )
 
-    def yuv_histogram(self,input_file):
+    def yuv_histogram(self,input_file, output_file):
         subprocess.run(
             [
-                "ffplay", input_file, 
-                "-vf", "split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay"  # Apply histogram filter
+                "ffmpeg", 
+                "-i", input_file, 
+                "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay", 
+                output_file
             ],
-            check=True
+        check=True
         )
