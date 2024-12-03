@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from test_main import app as test_app
+from integration_tests import app as test_app
 
 app = FastAPI()
 app.mount("/test", test_app)
@@ -19,3 +19,12 @@ async def root():
 #Test Run-Length Encoding: /test/test_run_length_encoding/
 #Test DCT Encoding: /test/test_dct_encoding/
 #Test DWT Encoding: /test/test_dwt_encoding/
+
+
+#NUEVOS TESTS CON ENDPOINTS:
+#Test resolution adaptor: /test/test_resolution_adaptor/?width=1280&height=720"
+#Test chroma subsampling: /test/test_chroma_subsampling/?pix_fmt=yuv420p"
+#Test get metadata: /test/test_get_metadata/"
+#Test mp4 reader: /test/test_mp4_reader/"
+#Test macro blocks: /test/test_video_macroblocks/"
+#Test yuv histogram: /test/test_yuv_histogram/"

@@ -5,10 +5,11 @@ from second_seminar import ffmpeg_utils_comas_alvaro  # Reemplaza con el nombre 
 
 class TestFFmpegUtils(unittest.TestCase):
     
+    
     @patch('subprocess.run')
     def test_resolution_adaptor(self, mock_run):
         # Llama al método
-        output = ffmpeg_utils_comas_alvaro.resolution_adaptor("input.mp4", 1920, 1080, "output.mp4")
+        output = ffmpeg_utils_comas_alvaro.resolution_adaptor(self,"input.mp4", 1920, 1080, "output.mp4")
         
         # Verifica que subprocess.run fue llamado con los argumentos correctos
         mock_run.assert_called_once_with(
@@ -22,7 +23,7 @@ class TestFFmpegUtils(unittest.TestCase):
     @patch('subprocess.run')
     def test_chroma_subsampling(self, mock_run):
         # Llama al método
-        output = ffmpeg_utils_comas_alvaro.chroma_subsampling("input.mp4", "output.mp4", "yuv420p")
+        output = ffmpeg_utils_comas_alvaro.chroma_subsampling(self, "input.mp4", "output.mp4", "yuv420p")
         
         # Verifica que subprocess.run fue llamado con los argumentos correctos
         mock_run.assert_called_once_with(
@@ -36,7 +37,7 @@ class TestFFmpegUtils(unittest.TestCase):
     @patch('subprocess.run')
     def test_get_metadata(self, mock_run):
         # Llama al método
-        ffmpeg_utils_comas_alvaro.get_metadata("input.mp4", "metadata.txt")
+        ffmpeg_utils_comas_alvaro.get_metadata(self,"input.mp4", "metadata.txt")
         
         # Verifica que subprocess.run fue llamado con los argumentos correctos
         mock_run.assert_called_once_with(
@@ -47,7 +48,7 @@ class TestFFmpegUtils(unittest.TestCase):
     @patch('subprocess.run')
     def test_video_macroblocks(self, mock_run):
         # Llamada al método
-        ffmpeg_utils_comas_alvaro.video_macroblocks("input.mp4", "output.mp4")
+        ffmpeg_utils_comas_alvaro.video_macroblocks(self,"input.mp4", "output.mp4")
         
         # Verificar que subprocess.run se haya llamado con los argumentos correctos
         mock_run.assert_called_once_with(
@@ -61,7 +62,7 @@ class TestFFmpegUtils(unittest.TestCase):
     @patch('subprocess.run')
     def test_yuv_histogram(self, mock_run):
         # Llamada al método
-        ffmpeg_utils_comas_alvaro.yuv_histogram("input.mp4")
+        ffmpeg_utils_comas_alvaro.yuv_histogram(self,"input.mp4")
         
         # Verificar que subprocess.run se haya llamado con los argumentos correctos
         mock_run.assert_called_once_with(
@@ -85,7 +86,7 @@ class TestFFmpegUtils(unittest.TestCase):
         mock_run.return_value = mock_process
 
         # Llamar a la función con un archivo de prueba
-        result = ffmpeg_utils_comas_alvaro.mp4_reader('input.mp4')
+        result = ffmpeg_utils_comas_alvaro.mp4_reader(self,'input.mp4')
 
         # Verificar que subprocess.run fue llamado con los parámetros correctos
         mock_run.assert_called_once_with(
@@ -110,7 +111,7 @@ class TestFFmpegUtils(unittest.TestCase):
         mock_run.return_value = mock_process
 
         # Llamar a la función con un archivo de prueba
-        result = ffmpeg_utils_comas_alvaro.mp4_reader('input.mp4')
+        result = ffmpeg_utils_comas_alvaro.mp4_reader(self,'input.mp4')
 
         # Verificar que el número de streams (tracks) es 0
         self.assertEqual(result, 0)
@@ -126,10 +127,11 @@ class TestFFmpegUtils(unittest.TestCase):
         mock_run.return_value = mock_process
 
         # Verificar que el número de streams (tracks) es 0, ya que no se encontraron flujos
-        result = ffmpeg_utils_comas_alvaro.mp4_reader('input.mp4')
+        result = ffmpeg_utils_comas_alvaro.mp4_reader(self,'input.mp4')
 
         # Verificar que no haya tracks
         self.assertEqual(result, 0)
+
 
 # Ejecuta los tests
 if __name__ == '__main__':

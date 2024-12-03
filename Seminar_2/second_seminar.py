@@ -92,14 +92,14 @@ class dwt_utils:
         return pywt.waverec2(coeffs, self.wavelet)
 
 class ffmpeg_utils_comas_alvaro: 
-    def resolution_adaptor(input_file, width, height, output_file):
+    def resolution_adaptor(self, input_file, width, height, output_file):
         subprocess.run(
             ["ffmpeg", "-i", input_file, "-vf", f"scale={width}:{height}", output_file],
             check=True
         )
         return output_file
 
-    def chroma_subsampling(input_file, output_file, pix_fmt):
+    def chroma_subsampling(self, input_file, output_file, pix_fmt):
         subprocess.run(
             #Pix format debe ser tipo yuv420, yuv422...
             ["ffmpeg", "-i", input_file, "-c:v", "libx264", "-pix_fmt", pix_fmt, output_file],
@@ -108,17 +108,17 @@ class ffmpeg_utils_comas_alvaro:
         )
         return output_file
 
-    def get_metadata(input_file, metadata_file):
+    def get_metadata(self, input_file, metadata_file):
         subprocess.run(
             ["ffmpeg", "-i", input_file, "-f", "ffmetadata", metadata_file],
             check=True
         )
 
-    def bbb_editor(input_file, output_dir):
+    def bbb_editor(self,input_file, output_dir):
         '''TO DO: Del input file exportar la info que se pide en contenedor'''
         
     
-    def mp4_reader(input_file):
+    def mp4_reader(self,input_file):
         result = subprocess.run(
             ["ffprobe", "-i", input_file, "-show_streams", "-select_streams", "v,a", "-v", "error"],
             stdout=subprocess.PIPE,
@@ -129,7 +129,7 @@ class ffmpeg_utils_comas_alvaro:
         track_count = result.stdout.count("Stream #")
         return track_count
 
-    def video_macroblocks(input_file,output_file):
+    def video_macroblocks(self,input_file,output_file):
         subprocess.run(
         [
             "ffmpeg", "-flags2", "+export_mvs", "-i", input_file, 
@@ -139,7 +139,7 @@ class ffmpeg_utils_comas_alvaro:
         check=True
         )
 
-    def yuv_histogram(input_file):
+    def yuv_histogram(self,input_file):
         subprocess.run(
             [
                 "ffplay", input_file, 

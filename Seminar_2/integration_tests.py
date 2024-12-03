@@ -1,11 +1,13 @@
-from fastapi import FastAPI
-from second_seminar import Exercises, dct_utils, dwt_utils
+from fastapi import FastAPI, HTTPException
+from second_seminar import Exercises, dct_utils, dwt_utils, ffmpeg_utils_comas_alvaro
 import numpy as np
+import subprocess
 
 app = FastAPI()
 exercise = Exercises()
 dct_utils_instance = dct_utils()
 dwt_utils_instance = dwt_utils()
+ffmpeg_utils = ffmpeg_utils_comas_alvaro()
 
 @app.get("/")
 async def root():
@@ -115,3 +117,75 @@ async def test_dwt_encoding():
         "reconstructed_data": reconstructed_data.tolist(),
         "test_passed": passed
     }
+
+
+
+@app.get("/test_resolution_adaptor/")
+async def test_resolution_adaptor(width: int, height: int):
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+    output_file = f"bbb_{width}x{height}.mp4"
+    output_path = f"../Seminar_2/output_file/{output_file}"
+
+    try:
+        result = ffmpeg_utils.resolution_adaptor(input_path, width, height, output_path)
+        return {"message": "Resolution adaptation successful", "output_file": result}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=400, detail=f"Error during resolution adaptation: {e}")
+
+@app.get("/test_chroma_subsampling/")
+async def test_chroma_subsampling(pix_fmt: str):
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+    output_file = f"bbb_{pix_fmt}.mp4"
+    output_path = f"../Seminar_2/output_file/{output_file}"
+
+    try:
+        result = ffmpeg_utils.chroma_subsampling(input_path, output_path, pix_fmt)
+        return {"message": "Chroma subsampling successful", "output_file": result}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=400, detail=f"Error during chroma subsampling: {e}")
+
+@app.get("/test_get_metadata/")
+async def test_get_metadata():
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+    metadata_file = "bbb_metadata.txt"
+    metadata_path = f"../Seminar_2/output_file/{metadata_file}"
+
+    try:
+        ffmpeg_utils.get_metadata(input_path, metadata_path)
+        return {"message": "Metadata extraction successful", "metadata_file": metadata_path}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=400, detail=f"Error during metadata extraction: {e}")
+
+@app.get("/test_mp4_reader/")
+async def test_mp4_reader():
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+
+    try:
+        track_count = ffmpeg_utils.mp4_reader(input_path)
+        return {"message": "MP4 reader test successful", "track_count": track_count}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=400, detail=f"Error during MP4 reading: {e}")
+
+
+@app.get("/test_video_macroblocks/")
+async def test_video_macroblocks():
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+    output_file = "bbb_with_macroblocks.mp4"
+    output_path = f"../Seminar_2/output_file/{output_file}"
+
+    try:
+        ffmpeg_utils.video_macroblocks(input_path, output_path)
+        return {"message": "Video macroblocks extraction successful", "output_file": output_path}
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@app.get("/test_yuv_histogram/")
+async def test_yuv_histogram():
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+
+    try:
+        ffmpeg_utils.yuv_histogram(input_path)
+        return {"message": "YUV histogram applied and video played successfully", "input_file": input_path}
+    except Exception as e:
+        return {"error": str(e)}
