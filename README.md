@@ -653,6 +653,8 @@ async def test_resolution_adaptor(width: int, height: int):
         
         # Verifica el valor devuelto
         self.assertEqual(output, "output.mp4")
+```
+
 
 ### S2 - Exercise 2
 For the second exercise, we are asked to modify the chroma subsampling. As in the previous exercise, given some inputs (input and ouput file path, and the new format), we return the new file with the chroma subsampling:
@@ -697,6 +699,7 @@ async def test_chroma_subsampling(pix_fmt: str):
         
         # Verifica el valor devuelto
         self.assertEqual(output, "output.mp4")
+```
 
 ### S2 - Exercise 3
 
@@ -813,6 +816,8 @@ async def test_bbb_editor():
             "audio_ac3": f"{output_dir}/bbb_20s_ac3.ac3",
             "final_container": f"{output_dir}/bbb_final_container.mp4"
         })
+```
+
 
 ### S2 - Exercise 5
 
