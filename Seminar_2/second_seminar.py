@@ -91,14 +91,18 @@ class dwt_utils:
     def inverse_transform(self, coeffs):
         return pywt.waverec2(coeffs, self.wavelet)
 
+#NEW CLASS SEMINAR-2
 class ffmpeg_utils_comas_alvaro: 
+    
+    #EX 1: Resolution adaptor
     def resolution_adaptor(self, input_file, width, height, output_file):
         subprocess.run(
             ["ffmpeg", "-i", input_file, "-vf", f"scale={width}:{height}", output_file],
             check=True
         )
         return output_file
-
+    
+    #EX 2: Chroma subsampling
     def chroma_subsampling(self, input_file, output_file, pix_fmt):
         subprocess.run(
             #Pix format debe ser tipo yuv420, yuv422...
@@ -108,12 +112,14 @@ class ffmpeg_utils_comas_alvaro:
         )
         return output_file
 
+    #EX 3: Get metadata
     def get_metadata(self, input_file, metadata_file):
         subprocess.run(
             ["ffmpeg", "-i", input_file, "-f", "ffmetadata", metadata_file],
             check=True
         )
 
+    #EX 4: BBB editor
     def bbb_editor(self,input_file, output_dir):
         import os
         import subprocess
@@ -150,17 +156,20 @@ class ffmpeg_utils_comas_alvaro:
         }
         
     
+    #EX 5: mp4 reader
     def mp4_reader(self,input_file):
         result = subprocess.run(
-            ["ffprobe", "-i", input_file, "-show_streams", "-select_streams", "v,a", "-v", "error"],
+            ["ffprobe", "-i", input_file, "-show_streams", "-v", "error"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
             check=True,
         )
-        track_count = result.stdout.count("Stream #")
+        track_count = result.stdout.count("index=")
         return track_count
 
+
+    #EX 6: show macroblocks and motion vectors
     def video_macroblocks(self,input_file,output_file):
         subprocess.run(
         [
@@ -171,6 +180,8 @@ class ffmpeg_utils_comas_alvaro:
         check=True
         )
 
+
+    #EX 7: yuv histogram
     def yuv_histogram(self,input_file, output_file):
         subprocess.run(
             [

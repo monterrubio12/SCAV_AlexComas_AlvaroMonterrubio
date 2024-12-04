@@ -22,6 +22,7 @@ async def root():
 
 
 #NUEVOS TESTS CON ENDPOINTS:
+
 #Test resolution adaptor: /test/test_resolution_adaptor/?width=1280&height=720"
 #Test chroma subsampling: /test/test_chroma_subsampling/?pix_fmt=yuv420p"
 #Test get metadata: /test/test_get_metadata/"

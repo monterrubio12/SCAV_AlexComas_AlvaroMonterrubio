@@ -118,8 +118,9 @@ async def test_dwt_encoding():
         "test_passed": passed
     }
 
+#INTEGRATION TESTS S2
 
-
+#Integration test resolution adaptor
 @app.get("/test_resolution_adaptor/")
 async def test_resolution_adaptor(width: int, height: int):
     input_path = f"../Seminar_2/input_file/bbb.mov"
@@ -132,6 +133,8 @@ async def test_resolution_adaptor(width: int, height: int):
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=400, detail=f"Error during resolution adaptation: {e}")
 
+
+#Integration test chroma subsampling
 @app.get("/test_chroma_subsampling/")
 async def test_chroma_subsampling(pix_fmt: str):
     input_path = f"../Seminar_2/input_file/bbb.mov"
@@ -144,6 +147,7 @@ async def test_chroma_subsampling(pix_fmt: str):
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=400, detail=f"Error during chroma subsampling: {e}")
 
+#Integration test get metadata
 @app.get("/test_get_metadata/")
 async def test_get_metadata():
     input_path = f"../Seminar_2/input_file/bbb.mov"
@@ -156,9 +160,11 @@ async def test_get_metadata():
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=400, detail=f"Error during metadata extraction: {e}")
 
+
+#Integration test mp4 reader (notice that input must be mp4 big buck bunny)
 @app.get("/test_mp4_reader/")
 async def test_mp4_reader():
-    input_path = f"../Seminar_2/input_file/bbb.mov"
+    input_path = f"../Seminar_2/input_file/bbb.mp4"
 
     try:
         track_count = ffmpeg_utils.mp4_reader(input_path)
@@ -167,6 +173,7 @@ async def test_mp4_reader():
         raise HTTPException(status_code=400, detail=f"Error during MP4 reading: {e}")
 
 
+#Integration test video macroblocks
 @app.get("/test_video_macroblocks/")
 async def test_video_macroblocks():
     input_path = f"../Seminar_2/input_file/bbb.mov"
@@ -180,6 +187,7 @@ async def test_video_macroblocks():
         return {"error": str(e)}
     
 
+#Integration test yuv histogram
 @app.get("/test_yuv_histogram/")
 async def test_yuv_histogram():
     input_path = f"../Seminar_2/input_file/bbb.mov"
@@ -193,6 +201,7 @@ async def test_yuv_histogram():
         return {"error": str(e)}
     
 
+#Integration test bbb_editor
 @app.get("/test_bbb_editor/")
 async def test_bbb_editor():
     input_path = "../Seminar_2/input_file/bbb.mov"  
