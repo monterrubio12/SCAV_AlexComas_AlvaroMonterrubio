@@ -609,6 +609,33 @@ To run the integration tests, the project folder must be organized as follows: C
 
 This structure ensures that the input files are correctly organized and accessible for all tests and functions.
 
+In order to run the unit tests you should run the next command from the terminal inside the `Seminar_2` folder:
+```
+python -m unittest unit_tests.py
+```
+
+The instructions to  run the docker and API, are the same ones as in the previous delivery but we include it here again:
+```
+docker run -d -p 8000:8000 practice1-app
+uvicorn main:app --reload
+```
+
+### Endpoint routes
+As we have already explained in the `main.py`file we include the routes to acces the different endpoints of our API. We put them here to eases the process if you want to run the code while reading the instructions.
+
+```
+#NUEVOS TESTS CON ENDPOINTS:
+
+#Test resolution adaptor: /test/test_resolution_adaptor/?width=1280&height=720"
+#Test chroma subsampling: /test/test_chroma_subsampling/?pix_fmt=yuv420p"
+#Test get metadata: /test/test_get_metadata/"
+#Test bbb_editor: /test/test_bbb_editor/"
+#Test mp4 reader: /test/test_mp4_reader/"
+#Test macro blocks: /test/test_video_macroblocks/"
+#Test yuv histogram: /test/test_yuv_histogram/"
+```
+
+
 ### S2 - Exercise 1
 In this first exercise we were asked to download the Big Buck Bunny video and implement a new endpoint / feature which let us modify the resolution of the video. To do this we have used a FFMPEG comand:
 
