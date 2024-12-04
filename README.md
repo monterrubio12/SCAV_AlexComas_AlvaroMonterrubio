@@ -641,7 +641,7 @@ async def test_resolution_adaptor(width: int, height: int):
 
 #Unit test resolution adaptor
 @patch('subprocess.run')
-    def test_resolution_adaptor(self, mock_run):
+def test_resolution_adaptor(self, mock_run):
         # Llama al método
         output = ffmpeg_utils_comas_alvaro.resolution_adaptor(self,"input.mp4", 1920, 1080, "output.mp4")
         
@@ -660,7 +660,7 @@ async def test_resolution_adaptor(width: int, height: int):
 For the second exercise, we are asked to modify the chroma subsampling. As in the previous exercise, given some inputs (input and ouput file path, and the new format), we return the new file with the chroma subsampling:
 
 ```python
-    def chroma_subsampling(self, input_file, output_file, pix_fmt):
+def chroma_subsampling(self, input_file, output_file, pix_fmt):
         subprocess.run(
             #Pix format debe ser tipo yuv420, yuv422...
             ["ffmpeg", "-i", input_file, "-c:v", "libx264", "-pix_fmt", pix_fmt, output_file],
@@ -687,7 +687,7 @@ async def test_chroma_subsampling(pix_fmt: str):
 
 #Unit test chroma subsampling
 @patch('subprocess.run')
-    def test_chroma_subsampling(self, mock_run):
+def test_chroma_subsampling(self, mock_run):
         # Llama al método
         output = ffmpeg_utils_comas_alvaro.chroma_subsampling(self, "input.mp4", "output.mp4", "yuv420p")
         
@@ -760,7 +760,7 @@ async def test_bbb_editor():
 
 #Unit test bbb_editor
 @patch('subprocess.run')
-    def test_bbb_editor(self, mock_run):
+def test_bbb_editor(self, mock_run):
         # Mock del entorno y de los paths
         mock_run.return_value = None  # Simular que todos los comandos se ejecutan correctamente
         output_dir = "output_directory"
