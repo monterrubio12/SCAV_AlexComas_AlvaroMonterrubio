@@ -702,6 +702,44 @@ def test_chroma_subsampling(self, mock_run):
 ```
 
 ### S2 - Exercise 3
+For the third exercise, we are asked to create a new endpoint / feature which let us read the video info and print at least 5 relevant data from the video. We decided to use an FFMPEG command to generate a metadata.txt file containing this information. As in the previous exercise, given some inputs (input and ouput file path), we return the new txt. file with the metadata. The implementation of this exercise is as follows:
+
+```python
+def get_metadata(self, input_file, metadata_file):
+        subprocess.run(
+            ["ffmpeg", "-i", input_file, "-f", "ffmetadata", metadata_file],
+            check=True
+        )
+```
+Again we include here the implementation of the integration test and the unit test for this third exercise:
+
+```python
+#Integration test get metadata
+@app.get("/test_get_metadata/")
+async def test_get_metadata():
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+    metadata_file = "bbb_metadata.txt"
+    metadata_path = f"../Seminar_2/output_file/{metadata_file}"
+
+    try:
+        ffmpeg_utils.get_metadata(input_path, metadata_path)
+        return {"message": "Metadata extraction successful", "metadata_file": metadata_path}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=400, detail=f"Error during metadata extraction: {e}")
+
+
+#Unit test get metadata
+@patch('subprocess.run')
+def test_get_metadata(self, mock_run):
+        # Llama al método
+        ffmpeg_utils_comas_alvaro.get_metadata(self,"input.mp4", "metadata.txt")
+        
+        # Verifica que subprocess.run fue llamado con los argumentos correctos
+        mock_run.assert_called_once_with(
+            ["ffmpeg", "-i", "input.mp4", "-f", "ffmetadata", "metadata.txt"],
+            check=True
+        )
+```
 
 ### S2 - Exercise 4
 For this fourth exercise, we are going to cut and export the bbb video in some different formats. First of all, the function asks for a input and output file paths. Then, we start by defining the name of the files that we are going to create later and we start to run some commands for the asked questions:
@@ -820,14 +858,76 @@ def test_bbb_editor(self, mock_run):
 
 
 ### S2 - Exercise 5
+In this fifth exercise, we were asked to create a new endpoint / feature which reads the tracks from an MP4 container, and it’s able to say how many tracks does the container contains. In this exercise given an inputs (input file path), we print the number of tracks contained. The implementation of this exrecise is as follows:
+
+```python
+def mp4_reader(self,input_file):
+        result = subprocess.run(
+            ["ffprobe", "-i", input_file, "-show_streams", "-v", "error"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True,
+        )
+        track_count = result.stdout.count("index=")
+        return track_count
+```
+Again we include here the implementation of the integration test and the unit test for this fifth exercise:
+
+```python
+#Integration test mp4 reader (notice that input must be mp4 big buck bunny)
+@app.get("/test_mp4_reader/")
+async def test_mp4_reader():
+    input_path = f"../Seminar_2/input_file/bbb.mp4"
+
+    try:
+        track_count = ffmpeg_utils.mp4_reader(input_path)
+        return {"message": "MP4 reader test successful", "track_count": track_count}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=400, detail=f"Error during MP4 reading: {e}")
+
+
+#Unit test mp4 reader
+@patch('subprocess.run')
+def test_mp4_reader_success(self, mock_run):
+        # Crear un objeto simulado (mock) para la salida de subprocess.run
+        mock_process = MagicMock()
+
+        # Simulamos una salida de stdout que contiene información sobre dos flujos (video y audio)
+        mock_process.stdout = "index=0\nindex=1\n"
+        mock_process.stderr = ""
+
+        # Configuramos el mock para que subprocess.run devuelva esta salida simulada
+        mock_run.return_value = mock_process
+
+        # Llamar a la función con un archivo de prueba
+        result = ffmpeg_utils_comas_alvaro.mp4_reader(self, 'input.mp4')
+
+        # Verificar que subprocess.run fue llamado con los parámetros correctos
+        mock_run.assert_called_once_with(
+            ["ffprobe", "-i", 'input.mp4', "-show_streams", "-v", "error"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True,
+        )
+
+        # Verificar que el número de streams (tracks) es 2
+        self.assertEqual(result, 2)
+```
 
 ### S2 - Exercise 6
-For this exercise, we are going to extract macroblocks and motion vectors from a video using FFMPEG. The function takes an input file (the video to process) and an output file path (where the processed video will be saved). 
-As in the previous exercises, We start by defining the input video file (input_file) and the output file (output_file) where the processed video will be saved. These paths are provided as arguments when the function is called.
+For this exercise, we were asked to extract macroblocks and motion vectors from a video using FFMPEG. The function takes an input file (the video to process) and an output file path (where the processed video will be saved). As in the previous exercises, We start by defining the input video file (input_file) and the output file (output_file) where the processed video will be saved. These paths are provided as arguments when the function is called.
+
 Then, by testing with different bbb videos, we noticed that H.264 codec requires the video dimensions (width and height) to be divisible by 2. If the video dimensions are odd, FFMPEG could throw an error or not process the video correctly. To address this, the function scales the video using the following FFMPEG filter:
-```"scale=trunc(iw/2)*2:trunc(ih/2)*2"```
-With this, we can run the FFMPEG comand with subprocess.run. This command processes the video and saves the output with the motion vectors and macroblocks shown:
+
+```python
+"scale=trunc(iw/2)*2:trunc(ih/2)*2"
 ```
+
+With this, we can run the FFMPEG comand with `subprocess.run`. This command processes the video and saves the output with the motion vectors and macroblocks shown:
+
+```python
 subprocess.run(
     [
         "ffmpeg", "-flags2", "+export_mvs", "-i", input_file, 
@@ -837,5 +937,89 @@ subprocess.run(
     check=True
 )
 ```
+Again we include here the implementation of the integration test and the unit test for this sixth exercise:
+
+```python
+#Integration test video macroblocks
+@app.get("/test_video_macroblocks/")
+async def test_video_macroblocks():
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+    output_file = "bbb_with_macroblocks.mp4"
+    output_path = f"../Seminar_2/output_file/{output_file}"
+
+    try:
+        ffmpeg_utils.video_macroblocks(input_path, output_path)
+        return {"message": "Video macroblocks extraction successful", "output_file": output_path}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+#Unit test video macroblocks
+@patch('subprocess.run')
+def test_video_macroblocks(self, mock_run):
+        # Llamada al método
+        ffmpeg_utils_comas_alvaro.video_macroblocks(self,"input.mp4", "output.mp4")
+        
+        # Verificar que subprocess.run se haya llamado con los argumentos correctos
+        mock_run.assert_called_once_with(
+            [
+                "ffmpeg", "-flags2", "+export_mvs", "-i", "input.mp4", 
+                "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,codecview=mv=pf+bf+bb", 
+                "output.mp4"
+            ],
+            check=True
+        )
+```
+
+### S2 - Exercise 7
+For the last exercise of this seminar we were asked to create a new endpoint / feature which output a video showing the YUV histogram. As in the previous exercises, given some inputs (input and ouput file path), we return the new file with the yuv histogra. The implementation of the function for this exercise is as follows:
+
+```python
+def yuv_histogram(self,input_file, output_file):
+        subprocess.run(
+            [
+                "ffmpeg", 
+                "-i", input_file, 
+                "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay", 
+                output_file
+            ],
+        check=True
+        )
+```
+Again we include here the implementation of the integration test and the unit test for this last exercise:
+
+```python
+#Integration test yuv histogram
+@app.get("/test_yuv_histogram/")
+async def test_yuv_histogram():
+    input_path = f"../Seminar_2/input_file/bbb.mov"
+    output_file = "bbb_with_yuv.mp4"
+    output_path = f"../Seminar_2/output_file/{output_file}"
+
+    try:
+        ffmpeg_utils.yuv_histogram(input_path,output_path)
+        return {"message": "YUV histogram applied and video played successfully", "input_file": input_path}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+#Unit test yuv histogram
+@patch('subprocess.run')
+def test_yuv_histogram(self, mock_run):
+        # Llamada al método
+        ffmpeg_utils_comas_alvaro.yuv_histogram(self,"input.mp4","output.mp4")
+        
+        # Verificar que subprocess.run se haya llamado con los argumentos correctos
+        mock_run.assert_called_once_with(
+            [
+                "ffmpeg", 
+                "-i", "input.mp4", 
+                "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2,split=2[a][b],[b]histogram,format=yuva444p[hh],[a][hh]overlay", 
+                "output.mp4"
+            ],
+            check=True
+        )
+```
+
 
 
