@@ -1,3 +1,16 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Seminar_2')))
+from second_seminar import  Exercises, dct_utils, dwt_utils, ffmpeg_utils_comas_alvaro
+from PIL import Image
+from typing import Iterator, Tuple, List
+from itertools import groupby
+import os
+import subprocess
+import numpy as np
+from scipy.fft import dct, idct
+import pywt
+
 class transcoding_utils_comas_alvaro: 
     def convert_to_multiple_formats(self, input_file):
  
@@ -70,4 +83,4 @@ class transcoding_utils_comas_alvaro:
         # Generar cada versión del video
         for resolution, suffix in resolutions:
             output_file = os.path.join(output_dir, f"{suffix}.mp4")
-            self.resolution_adaptor(input_file, resolution, output_file)
+            ffmpeg_utils_comas_alvaro.resolution_adaptor(input_file, resolution, output_file)
