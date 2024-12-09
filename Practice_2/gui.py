@@ -78,8 +78,7 @@ class monsterConverter(QMainWindow):
                 self.output_input.setText(output_directory)
                 setattr(self, variable_name, output_directory)  # Asignamos a la variable indicada
 
-    def execute_conversion(self):
-        
+
 
 
 
