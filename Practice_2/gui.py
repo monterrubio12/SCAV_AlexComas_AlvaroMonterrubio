@@ -77,6 +77,16 @@ class monsterConverter(QMainWindow):
             if output_directory:
                 self.output_input.setText(output_directory)
                 setattr(self, variable_name, output_directory)  # Asignamos a la variable indicada
+    
+    def execution(self):
+        input_file = self.input_file_path
+        output_dir = self.output_directory
+        format_type = self.selected_format
+        # Realizamos la llamada a la API para la conversión
+        url = "http://127.0.0.1:8000/convert_video/"
+        payload = {"input_file": input_file, "format_type": format_type}
+        response = requests.post(url, json=payload)
+
 
 
 

@@ -1,12 +1,37 @@
 from fastapi import FastAPI
+from pydantic import BaseModel  
 from integration_tests import app as test_app
+from practice_2 import transcoding_utils_comas_alvaro
 
 app = FastAPI()
 app.mount("/test", test_app)
 
+# Definir la clase ConversionRequest
+class ConversionRequest(BaseModel):
+    input_file: str
+    format_type: str
+
 @app.get("/")
 async def root():
     return {"message": "Practice2 by Alex Comas & Alvaro Monterrubio"}
+
+@app.post("/convert_video/")
+async def convert_video(request: ConversionRequest):
+    input_file = request.input_file
+    format_type = request.format_type
+    
+    try:
+        # Instanciar el transcoder
+        transcoder = transcoding_utils_comas_alvaro()
+        
+        # Llamamos a la función de transcoding
+        transcoder.convert_to_multiple_formats(input_file, format_type)
+        
+        return {"message": f"Video convertido a {format_type} exitosamente", "input_file": input_file}
+    
+    except Exception as e:
+        return {"error": str(e)}
+
 
 
 #HACER TEST CON ENDPOINTS:
