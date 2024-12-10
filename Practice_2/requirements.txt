@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pillow
+numpy
+scipy
+pywavelets
+PyQt5
+requests
