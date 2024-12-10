@@ -85,7 +85,7 @@ class monsterConverter(QMainWindow):
 
         # Llamada a la API para la conversión
         url = "http://127.0.0.1:8000/convert_video/" # URL del endpoint de la API para realizar la conversión.
-        payload = {"input_file": input_file, "format_type": format_type} # Creamos un diccionario con los datos que se enviarán en la solicitud
+        payload = {"input_file": input_file, "format_type": format_type, "output_dir": output_dir} # Creamos un diccionario con los datos que se enviarán en la solicitud
         response = requests.post(url, json=payload) # Envía una solicitud POST a la API con los datos en formato JSON
         print(response.json())
         

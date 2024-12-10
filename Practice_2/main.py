@@ -10,6 +10,8 @@ app.mount("/test", test_app)
 class ConversionRequest(BaseModel):
     input_file: str
     format_type: str
+    output_dir: str
+
 
 @app.get("/")
 async def root():
@@ -19,13 +21,14 @@ async def root():
 async def convert_video(request: ConversionRequest):
     input_file = request.input_file
     format_type = request.format_type
+    output_dir = request.output_dir
     
     try:
         # Instanciar el transcoder
         transcoder = transcoding_utils_comas_alvaro()
         
         # Llamamos a la función de transcoding
-        transcoder.convert_to_multiple_formats(input_file, format_type)
+        transcoder.convert_to_multiple_formats(input_file, output_dir, format_type)
         
         return {"message": f"Video convertido a {format_type} exitosamente", "input_file": input_file}
     
@@ -46,7 +49,7 @@ async def convert_video(request: ConversionRequest):
 #Test DWT Encoding: /test/test_dwt_encoding/
 
 
-#NUEVOS TESTS CON ENDPOINTS:
+#TESTS CON ENDPOINTS S2:
 
 #Test resolution adaptor: /test/test_resolution_adaptor/?width=1280&height=720"
 #Test chroma subsampling: /test/test_chroma_subsampling/?pix_fmt=yuv420p"
@@ -55,3 +58,6 @@ async def convert_video(request: ConversionRequest):
 #Test mp4 reader: /test/test_mp4_reader/"
 #Test macro blocks: /test/test_video_macroblocks/"
 #Test yuv histogram: /test/test_yuv_histogram/"
+
+#NUEVO TEST CON ENDPOINTS:
+#Test encode lader: /test/test_encode_ladder/"

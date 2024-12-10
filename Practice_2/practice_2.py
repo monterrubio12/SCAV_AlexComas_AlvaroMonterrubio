@@ -12,8 +12,8 @@ from scipy.fft import dct, idct
 import pywt
 
 class transcoding_utils_comas_alvaro: 
-    def convert_to_multiple_formats(self, input_file, type):
-        output_dir = os.path.dirname(input_file)
+    def convert_to_multiple_formats(self, input_file, output_path, type):
+        output_dir = output_path
 
         # Tipos de codec con los que trabvajaremos y como se exportaran
         output_files = {
@@ -68,4 +68,5 @@ class transcoding_utils_comas_alvaro:
         # Generar cada versión del video
         for resolution, suffix in resolutions:
             output_file = os.path.join(output_dir, f"{suffix}.mp4")
-            ffmpeg_utils_comas_alvaro.resolution_adaptor(input_file, resolution, output_file)
+            width, height = map(int, resolution.split('x'))
+            ffmpeg_utils_comas_alvaro.resolution_adaptor(self, input_file, width, height, output_file)

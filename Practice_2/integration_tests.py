@@ -217,3 +217,38 @@ async def test_bbb_editor():
         return {"message": "BBB container created successfully", "output_files": result}
     except Exception as e:
         return {"error": str(e)}
+    
+
+#Integration test encode lader.
+@app.get("/test_encode_ladder/")
+async def test_encode_ladder():
+    input_path = "../Practice_2/input_file/bbb.mov"  
+    output_dir = "../Practice_2/output_file/"        
+
+    try:
+        # Crear instancia de transcoding utils
+        transcoding_utils = transcoding_utils_comas_alvaro()
+        
+        ## Llamar a la función `encode_ladder` con los argumentos requeridos
+        transcoding_utils.encode_ladder(input_path, output_dir)
+        
+        # Listar los archivos generados
+        generated_files = [
+            os.path.join(output_dir, f"{suffix}.mp4")
+            for suffix in ["1080p", "720p", "480p", "360p"]
+        ]
+
+        #Verificar la creacion de los archivos
+        missing_files = [file for file in generated_files if not os.path.exists(file)]
+        if missing_files:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Missing expected output files: {missing_files}"
+            )
+
+        return {
+            "message": "Encode ladder test successful",
+            "output_files": generated_files
+        }
+    except Exception as e:
+        return {"error": str(e)}

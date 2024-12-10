@@ -5,6 +5,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Seminar_2')))
 from second_seminar import ffmpeg_utils_comas_alvaro  # Reemplaza con el nombre real de tu módulo
+from practice_2 import transcoding_utils_comas_alvaro
 
 class TestFFmpegUtils(unittest.TestCase):
     
@@ -165,6 +166,110 @@ class TestFFmpegUtils(unittest.TestCase):
 
         # Verificar que el número de streams (tracks) es 2
         self.assertEqual(result, 2)
+    
+
+    @patch('subprocess.run')
+    def test_convert_to_multiple_formats_h265(self, mock_run):
+        # Set up
+        input_file = "input.mp4"
+        output_dir = "output_directory"
+        type = "H265"
+
+        # Call the function
+        transcoding_utils_comas_alvaro.convert_to_multiple_formats(self, input_file, output_dir, type)
+
+        # Verify subprocess.run was called correctly
+        mock_run.assert_called_once_with(
+            [
+                "ffmpeg", "-i", input_file, 
+                "-c:v", "libx265", "-crf", "26", "-preset", "fast", 
+                "-c:a", "aac", "-b:a", "128k", os.path.join(output_dir, "output_h265.mp4")
+            ],
+            check=True
+        )
+
+    @patch('subprocess.run')
+    def test_convert_to_multiple_formats_vp9(self, mock_run):
+        # Set up
+        input_file = "input.mp4"
+        output_dir = "output_directory"
+        type = "VP9"
+
+        # Call the function
+        transcoding_utils_comas_alvaro.convert_to_multiple_formats(self, input_file, output_dir, type)
+
+        # Verify subprocess.run was called correctly
+        mock_run.assert_called_once_with(
+            [
+                "ffmpeg", "-i", input_file, 
+                "-c:v", "libvpx-vp9", "-b:v", "2M", os.path.join(output_dir, "output_vp9.webm")
+            ],
+            check=True
+        )
+
+    @patch('subprocess.run')
+    def test_convert_to_multiple_formats_av1(self, mock_run):
+        # Set up
+        input_file = "input.mp4"
+        output_dir = "output_directory"
+        type = "AV1"
+
+        # Call the function
+        transcoding_utils_comas_alvaro.convert_to_multiple_formats(self, input_file, output_dir, type)
+
+        # Verify subprocess.run was called correctly
+        mock_run.assert_called_once_with(
+            [
+                "ffmpeg", "-i", input_file, 
+                "-c:v", "libaom-av1", "-crf", "30", os.path.join(output_dir, "output_av1.mkv")
+            ],
+            check=True
+        )
+
+    @patch('subprocess.run')
+    def test_convert_to_multiple_formats_vp8(self, mock_run):
+        # Set up
+        input_file = "input.mp4"
+        output_dir = "output_directory"
+        type = "VP8"
+
+        # Call the function
+        transcoding_utils_comas_alvaro.convert_to_multiple_formats(self, input_file, output_dir, type)
+
+        # Verify subprocess.run was called correctly
+        mock_run.assert_called_once_with(
+            [
+                "ffmpeg", "-i", input_file, 
+                "-c:v", "libvpx", "-b:v", "1M", "-c:a", "libvorbis", os.path.join(output_dir, "output_vp8.webm")
+            ],
+            check=True
+        )
+
+    @patch('second_seminar.ffmpeg_utils_comas_alvaro.resolution_adaptor')
+    def test_encode_ladder(self, mock_resolution_adaptor):
+        # Set up
+        input_file = "input.mp4"
+        output_dir = "output_directory"
+
+        # Call the function
+        transcoding_utils_comas_alvaro.encode_ladder(self, input_file, output_dir)
+
+        # Define the expected calls to resolution_adaptor
+        expected_calls = [
+            (1920, 1080, "1080p"),
+            (1280, 720, "720p"),
+            (854, 480, "480p"),
+            (640, 360, "360p"),
+        ]
+
+        # Verify resolution_adaptor was called for each resolution
+        for width, height, suffix in expected_calls:
+            output_file = os.path.join(output_dir, f"{suffix}.mp4")
+            mock_resolution_adaptor.assert_any_call(self, input_file, width, height, output_file)
+
+        # Verify the number of calls matches
+        self.assertEqual(mock_resolution_adaptor.call_count, len(expected_calls))
+
 
 
 # Ejecuta los tests
