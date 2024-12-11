@@ -1205,7 +1205,7 @@ async def test_encode_ladder():
         }
     except Exception as e:
         return {"error": str(e)}
-``
+```
 
 ### P2 - Exercise 3
 For this third task, and one of the most complicated of the course, we have to design a GUI to use the created APIs in a intuitive way. We have previously worked with PyQt5 but not with APIs, so it's a challange for us. The initial idea was to implement most of the generated functions, but as we didn't have enough time, we have implemented the convert_to_multiple_formats, as we can use the input, output file and type. The GUI has been implemented in the file `gui.py`.
