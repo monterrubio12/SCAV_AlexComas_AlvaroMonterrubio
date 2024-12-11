@@ -1314,7 +1314,11 @@ if __name__ == "__main__":
     sys.exit(app.exec())
 ```
 
-To run the GUI, we have first to run the API, and then `python gui.py`
+To run the GUI, we have first to run the API, and then in the terminal the next command
+
+```
+python gui.py
+```
 
 ### P2 - Exercise 4
 In this last exercise we were asked to use AI to try to improve and reduce lines of our code. In our case, in order to improve our code using the AI we have implemented the fifth new unit tests  as we have comented in the introduction. The tests are included in the `unit_tests.py` file. And to run them, as we have already explained, we have tu use the next command from the terminal inside the `Practice_2` folder:
