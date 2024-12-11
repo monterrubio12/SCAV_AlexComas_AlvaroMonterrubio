@@ -1059,7 +1059,7 @@ For this delivery. we have created a new directory in our project named `Practic
 
 - `integration_tests.py`: This file also imports the classes from `second_seminar.py` and includes the integration tests. It uses the Big Buck Bunny video from previous exercises and adds a new integration test for the encoding ladder to validate its functionality.
 
-- `main.py`: This file specifies the routes for the new endpoints, instantiates the tests from `integration_tests.py, and call the function implemented to convert the codec type using the parameters defined in our GUI.
+- `main.py`: This file specifies the routes for the new endpoints, instantiates the tests from `integration_tests.py`, and call the function implemented to convert the codec type using the parameters defined in our GUI.
 
 - `unit_tests.py`: This file includes unit tests from previous exercises, along with five new unit tests for this practice. Four of the new tests validate each of the codec formats (VP8, VP9, H.265, and AV1), and the fifth test proves the functionality of the encoding ladder.
 
