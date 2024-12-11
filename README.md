@@ -1096,7 +1096,7 @@ As we have explained in the `main.py`file we include a new routes to acces the n
 
 ### P2 - Exercise 1
 For this first exercise of the last practice of the course, we have to create a new endpoint/feature to convert any input video into VP8, VP9, h265 & AV1.
-In order to do this, we have created a new class inside the py file `practice_2.py`. Here, we have created the class transcoding_utils_comas_alvaro, where we are creting the new functions.
+In order to do this, we have created a new class inside the py file `practice_2.py`. Here, we have created the class `transcoding_utils_comas_alvaro`, where we are creting the new functions.
 The first function is `convert_to_multiple_formats`. As an input, we ask for a input and outut path, and the format type, which should be one of the asked in the statement. 
 First of all, we define all the possible codecs and how they will be exported:
 
@@ -1148,7 +1148,7 @@ Most of the comands used are from FFMPEG website. With the VP9 one, we tried to 
 ### P2 - Exercise 2
 For this second exercise of the final practice in the course, we were tasked with creating a new endpoint/feature to generate an encoding ladder for input videos. This involves producing multiple output videos at different resolutions and formats, optimizing the backend by reusing previously implemented methods and applying inheritance or modular function design where appropriate.
 
-To implement this functionality, we extended the transcoding_utils_comas_alvaro class in the `practice_2.py` file, by adding the `encode_ladder` function, which is responsible for generating an encoding ladder. This method processes the input video to produce multiple outputs at different resolutions: 1080p, 720p, 480p, and 360p. Each version is saved with a suffix indicating the resolution. Internally, this method utilizes the `resolution_adaptor` function from the `ffmpeg_utils_comas_alvaro` module to adapt the input video to each resolution.
+To implement this functionality, we extended the `transcoding_utils_comas_alvaro` class in the `practice_2.py` file, by adding the `encode_ladder` function, which is responsible for generating an encoding ladder. This method processes the input video to produce multiple outputs at different resolutions: 1080p, 720p, 480p, and 360p. Each version is saved with a suffix indicating the resolution. Internally, this method utilizes the `resolution_adaptor` function from the `ffmpeg_utils_comas_alvaro` module to adapt the input video to each resolution.
 
 ```python
 def encode_ladder(self, input_file, output_dir):
