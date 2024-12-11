@@ -1099,7 +1099,7 @@ As we have explained in the `main.py`file we include a new routes to acces the n
 ### P2 - Exercise 3
 
 ### P2 - Exercise 4
-In this last exercise we were asked to use AI to try to improve and reduce lines of our code. In our case, in order to improve our code using the AI we have implemented the fifth new unit tests  as we have comented in the introduction. The tests are included in the ``unit_tests.py` file. And tu run them as we have already explained we have tu use the next command from the terminal inside the `Practice_2` folder:
+In this last exercise we were asked to use AI to try to improve and reduce lines of our code. In our case, in order to improve our code using the AI we have implemented the fifth new unit tests  as we have comented in the introduction. The tests are included in the `unit_tests.py` file. And tu run them as we have already explained we have tu use the next command from the terminal inside the `Practice_2` folder:
 
 ```
 python -m unittest unit_tests.py
