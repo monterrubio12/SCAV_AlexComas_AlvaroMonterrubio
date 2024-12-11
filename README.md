@@ -1112,7 +1112,7 @@ Then, by using IF clauses, depending on the type asqued by the user, we will exe
 Most of the comands used are from FFMPEG page. With the VP9 one, we tried to do the 2 steps algorithm, but we obtained some errors and due to the lack of time, we decided to use the simpliest way to encode to VP9.
 
 ````
-# En función de la petición, decidimos que proceso ejecutamos con condiciones if
+#En función de la petición, decidimos que proceso ejecutamos con condiciones if
         if type == "H265":
             subprocess.run(
                 [
@@ -1184,7 +1184,7 @@ class monsterConverter(QMainWindow):
 Then, we set some variables and titles of the gui:
 
 ```
- # Variables para almacenar rutas y formato + layout
+ #Variables para almacenar rutas y formato + layout
         self.input_file_path = ""
         self.output_directory = ""
         self.selected_format = ""  
@@ -1201,7 +1201,7 @@ Then, we set some variables and titles of the gui:
 Also, we wanted to have the codec type as a combo format, the input and output paths as a button to can surf on the local searcher and a execute button who runs and calls the API, so we inicialize the combo and the buttons with their respective subtittles
 
 ```
-# ComboBox con los formatos
+#ComboBox con los formatos
         subtitle_label = QLabel("Select Codec to Convert:")
         subtitle_label.setAlignment(Qt.AlignLeft)
         layout.addWidget(subtitle_label)
