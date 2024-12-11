@@ -1095,9 +1095,189 @@ As we have explained in the `main.py`file we include a new routes to acces the n
 ```
 
 ### P2 - Exercise 1
-### P2 - Exercise 2
-### P2 - Exercise 3
+For this first exercise of the last practice of the course, we have to create a new endpoint/feature to convert any input video into VP8, VP9, h265 & AV1.
+In order to do this, we have created a new class inside the py file "practice_2.py". Here, we have created the class transcoding_utils_comas_alvaro, where we are creting the new functions.
+The first function is "convert_to_multiple_formats". As an input, we asck for a input and outut path, and the format type, which should be one of the asked in the statement. 
+First of all, we define all the possible codecs and how will be they exported:
+````
+# Tipos de codec con los que trabvajaremos y como se exportaran
+        output_files = {
+            "H265": os.path.join(output_dir, "output_h265.mp4"),
+            "VP9": os.path.join(output_dir, "output_vp9.webm"),
+            "AV1": os.path.join(output_dir, "output_av1.mkv"),
+            "VP8": os.path.join(output_dir, "output_vp8.webm"),
+        }
+```
+Then, by using IF clauses, depending on the type asqued by the user, we will execute different subprocess to have an optimized algorithm.
+Most of the comands used are from FFMPEG page. With the VP9 one, we tried to do the 2 steps algorithm, but we obtained some errors and due to the lack of time, we decided to use the simpliest way to encode to VP9.
 
+````
+# En función de la petición, decidimos que proceso ejecutamos con condiciones if
+        if type == "H265":
+            subprocess.run(
+                [
+                    "ffmpeg", "-i", input_file, 
+                    "-c:v", "libx265", "-crf", "26", "-preset", "fast", 
+                    "-c:a", "aac", "-b:a", "128k", output_files["H265"]
+                ],
+                check=True
+            )
+        #Intentamos hacer el de dos pasos pero peta, lo realizamos solo con uno
+        elif type == "VP9":
+            subprocess.run(
+                [
+                    "ffmpeg", "-i", input_file, 
+                    "-c:v", "libvpx-vp9", "-b:v", "2M", output_files["VP9"]
+                ],
+                check=True
+            )
+        elif type == "AV1":
+            subprocess.run(
+                ["ffmpeg", "-i", input_file, "-c:v", "libaom-av1", "-crf", "30", output_files["AV1"]],
+                check=True
+            )
+        elif type == "VP8":
+            subprocess.run(
+                ["ffmpeg", "-i", input_file, "-c:v", "libvpx", "-b:v", "1M", "-c:a", "libvorbis", output_files["VP8"]],
+                check=True
+            )
+```
+
+### P2 - Exercise 2
+For this second exercise of the final practice in the course, we were tasked with creating a new endpoint/feature to generate an encoding ladder for input videos. This involves producing multiple output videos at different resolutions and formats, optimizing the backend by reusing previously implemented methods and applying inheritance or modular function design where appropriate.
+
+To implement this functionality, we extended the transcoding_utils_comas_alvaro class in the practice_2.py file, by adding the "encode_ladder" function, which is responsible for generating an encoding ladder. This method processes the input video to produce multiple outputs at different resolutions: 1080p, 720p, 480p, and 360p. Each version is saved with a suffix indicating the resolution. Internally, this method utilizes the resolution_adaptor function from the ffmpeg_utils_comas_alvaro module to adapt the input video to each resolution.
+
+```
+    def encode_ladder(self, input_file, output_dir):
+
+        #Todas las resoluciones con las que trabajaremos y su sufijo
+        resolutions = [
+            ("1920x1080", "1080p"),
+            ("1280x720", "720p"),
+            ("854x480", "480p"),
+            ("640x360", "360p")
+        ]
+
+
+        # Generar cada versión del video
+        for resolution, suffix in resolutions:
+            output_file = os.path.join(output_dir, f"{suffix}.mp4")
+            ffmpeg_utils_comas_alvaro.resolution_adaptor(input_file, resolution, output_file)
+```
+
+### P2 - Exercise 3
+For this third task, and one of the most complicated of the course, we have to design a GUI to use the created APIs in a intuitive way. We have previously worked with PyQt5 but not with APIs, so it's a challange for us.
+The initial idea was to implement most of the generated functions, but as we didn't have enough time, we have implemented the convert_to_multiple_formats, as we can use the input, output file and type.
+The file is the gui.py.
+We first of all inicialize a class, and the gui settings:
+
+```
+class monsterConverter(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Monster Converter") #Hemos llamado así a nuestra super GUI
+        self.setGeometry(100, 100, 600, 400)
+        self.central_widget = QWidget(self)
+        self.setCentralWidget(self.central_widget)
+```  
+Then, we set some variables and titles of the gui:
+
+```
+ # Variables para almacenar rutas y formato + layout
+        self.input_file_path = ""
+        self.output_directory = ""
+        self.selected_format = ""  
+        layout = QVBoxLayout(self.central_widget)
+
+        # Título principal
+        title_label = QLabel("Monster Converter")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_label.setStyleSheet("font-size: 24px; font-weight: bold;")
+        layout.addWidget(title_label, alignment=Qt.AlignTop)
+
+```
+
+Also, we wanted to have the codec type as a combo format, the input and output paths as a button to can surf on the local searcher and a execute button who runs and calls the API, so we inicialize the combo and the buttons with their respective subtittles
+
+```
+# ComboBox con los formatos
+        subtitle_label = QLabel("Select Codec to Convert:")
+        subtitle_label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(subtitle_label)
+        self.activity_combo = QComboBox()
+        self.activity_combo.addItems(["H265", "VP9", "AV1", "VP8"])
+        self.activity_combo.currentTextChanged.connect(self.on_activity_selected)
+        layout.addWidget(self.activity_combo)
+
+        # Botón para cargar archivo de entrada
+        load_button = QPushButton("Cargar Archivo (Input)")
+        load_button.clicked.connect(lambda: self.browse_path("input_file_path"))
+        layout.addWidget(load_button)
+
+        self.file_input = QLineEdit()
+        layout.addWidget(self.file_input)
+
+        # Botón para seleccionar carpeta de salida
+        output_button = QPushButton("Seleccionar Carpeta de Destino")
+        output_button.clicked.connect(lambda: self.browse_path("output_directory"))
+        layout.addWidget(output_button)
+
+        self.output_input = QLineEdit()
+        layout.addWidget(self.output_input)
+
+        # Botón para ejecutar la acción
+        execute_button = QPushButton("Ejecutar")
+        execute_button.clicked.connect(self.execution)  # Conecta el botón a la función
+        layout.addWidget(execute_button)
+
+```
+
+Finally, in order to do more interactive the buttons, we have created some extra functions, which allows to store on the variables the paths, calls some external functions for searching or to execute:
+
+
+```
+   def browse_path(self, variable_name): #Función para poder acceder al explorador de manera amigable a seleccionar archivos y rutas
+
+        if variable_name == "input_file_path":
+            file_path, _ = QFileDialog.getOpenFileName(self, "Seleccionar Archivo")
+            if file_path:
+                self.file_input.setText(file_path)
+                self.input_file_path = file_path  # Asigna a la variable global
+        elif variable_name == "output_directory":
+            output_directory = QFileDialog.getExistingDirectory(self, "Seleccionar Carpeta de Destino")
+            if output_directory:
+                self.output_input.setText(output_directory)
+                self.output_directory = output_directory  # Asigna a la variable global
+
+    def execution(self):
+ 
+        input_file = self.input_file_path
+        output_dir = self.output_directory
+        format_type = self.selected_format
+
+        if not input_file or not output_dir or not format_type: #Nos aseguramos de que todos los campos no esten vacios para poder ejecutar bien la llamada a la API
+            print("Todos los campos son obligatorios")
+            return
+
+        # Llamada a la API para la conversión
+        url = "http://127.0.0.1:8000/convert_video/" # URL del endpoint de la API para realizar la conversión.
+        payload = {"input_file": input_file, "format_type": format_type} # Creamos un diccionario con los datos que se enviarán en la solicitud
+        response = requests.post(url, json=payload) # Envía una solicitud POST a la API con los datos en formato JSON
+        print(response.json())
+```
+
+Finally, this block initializes the PyQt5 application. It creates an instance of QApplication, displays the main window of the monsterConverter class, and starts the event loop to handle user interactions. The sys.exit(app.exec()) ensures a clean exit when the application is closed.
+
+```
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = monsterConverter()
+    window.show()
+    sys.exit(app.exec())
+```
+
+To run the GUI, we have first to run the API, and then "python gui.py"
 ### P2 - Exercise 4
 In this last exercise we were asked to use AI to try to improve and reduce lines of our code. In our case, in order to improve our code using the AI we have implemented the fifth new unit tests  as we have comented in the introduction. The tests are included in the `unit_tests.py` file. And to run them, as we have already explained, we have tu use the next command from the terminal inside the `Practice_2` folder:
 
