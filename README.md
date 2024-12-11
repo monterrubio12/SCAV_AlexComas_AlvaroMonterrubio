@@ -1148,7 +1148,7 @@ Most of the comands used are from FFMPEG website. With the VP9 one, we tried to 
 ### P2 - Exercise 2
 For this second exercise of the final practice in the course, we were tasked with creating a new endpoint/feature to generate an encoding ladder for input videos. This involves producing multiple output videos at different resolutions and formats, optimizing the backend by reusing previously implemented methods and applying inheritance or modular function design where appropriate.
 
-To implement this functionality, we extended the transcoding_utils_comas_alvaro class in the `practice_2.py` file, by adding the `encode_ladder function, which is responsible for generating an encoding ladder. This method processes the input video to produce multiple outputs at different resolutions: 1080p, 720p, 480p, and 360p. Each version is saved with a suffix indicating the resolution. Internally, this method utilizes the resolution_adaptor function from the ffmpeg_utils_comas_alvaro module to adapt the input video to each resolution.
+To implement this functionality, we extended the transcoding_utils_comas_alvaro class in the `practice_2.py` file, by adding the `encode_ladder` function, which is responsible for generating an encoding ladder. This method processes the input video to produce multiple outputs at different resolutions: 1080p, 720p, 480p, and 360p. Each version is saved with a suffix indicating the resolution. Internally, this method utilizes the resolution_adaptor function from the ffmpeg_utils_comas_alvaro module to adapt the input video to each resolution.
 
 ```python
 def encode_ladder(self, input_file, output_dir):
