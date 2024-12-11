@@ -1099,7 +1099,8 @@ For this first exercise of the last practice of the course, we have to create a 
 In order to do this, we have created a new class inside the py file "practice_2.py". Here, we have created the class transcoding_utils_comas_alvaro, where we are creting the new functions.
 The first function is "convert_to_multiple_formats". As an input, we asck for a input and outut path, and the format type, which should be one of the asked in the statement. 
 First of all, we define all the possible codecs and how will be they exported:
-````
+
+```python
 # Tipos de codec con los que trabvajaremos y como se exportaran
         output_files = {
             "H265": os.path.join(output_dir, "output_h265.mp4"),
@@ -1108,10 +1109,11 @@ First of all, we define all the possible codecs and how will be they exported:
             "VP8": os.path.join(output_dir, "output_vp8.webm"),
         }
 ```
+
 Then, by using IF clauses, depending on the type asqued by the user, we will execute different subprocess to have an optimized algorithm.
 Most of the comands used are from FFMPEG page. With the VP9 one, we tried to do the 2 steps algorithm, but we obtained some errors and due to the lack of time, we decided to use the simpliest way to encode to VP9.
 
-````
+```python
 #En función de la petición, decidimos que proceso ejecutamos con condiciones if
         if type == "H265":
             subprocess.run(
@@ -1148,7 +1150,7 @@ For this second exercise of the final practice in the course, we were tasked wit
 
 To implement this functionality, we extended the transcoding_utils_comas_alvaro class in the practice_2.py file, by adding the "encode_ladder" function, which is responsible for generating an encoding ladder. This method processes the input video to produce multiple outputs at different resolutions: 1080p, 720p, 480p, and 360p. Each version is saved with a suffix indicating the resolution. Internally, this method utilizes the resolution_adaptor function from the ffmpeg_utils_comas_alvaro module to adapt the input video to each resolution.
 
-```
+```python
     def encode_ladder(self, input_file, output_dir):
 
         #Todas las resoluciones con las que trabajaremos y su sufijo
@@ -1172,7 +1174,7 @@ The initial idea was to implement most of the generated functions, but as we did
 The file is the gui.py.
 We first of all inicialize a class, and the gui settings:
 
-```
+```python
 class monsterConverter(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -1183,7 +1185,7 @@ class monsterConverter(QMainWindow):
 ```  
 Then, we set some variables and titles of the gui:
 
-```
+```python
  #Variables para almacenar rutas y formato + layout
         self.input_file_path = ""
         self.output_directory = ""
@@ -1200,7 +1202,7 @@ Then, we set some variables and titles of the gui:
 
 Also, we wanted to have the codec type as a combo format, the input and output paths as a button to can surf on the local searcher and a execute button who runs and calls the API, so we inicialize the combo and the buttons with their respective subtittles
 
-```
+```python
 #ComboBox con los formatos
         subtitle_label = QLabel("Select Codec to Convert:")
         subtitle_label.setAlignment(Qt.AlignLeft)
@@ -1235,8 +1237,7 @@ Also, we wanted to have the codec type as a combo format, the input and output p
 
 Finally, in order to do more interactive the buttons, we have created some extra functions, which allows to store on the variables the paths, calls some external functions for searching or to execute:
 
-
-```
+```python
    def browse_path(self, variable_name): #Función para poder acceder al explorador de manera amigable a seleccionar archivos y rutas
 
         if variable_name == "input_file_path":
@@ -1269,7 +1270,7 @@ Finally, in order to do more interactive the buttons, we have created some extra
 
 Finally, this block initializes the PyQt5 application. It creates an instance of QApplication, displays the main window of the monsterConverter class, and starts the event loop to handle user interactions. The sys.exit(app.exec()) ensures a clean exit when the application is closed.
 
-```
+```python
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = monsterConverter()
@@ -1278,6 +1279,7 @@ if __name__ == "__main__":
 ```
 
 To run the GUI, we have first to run the API, and then "python gui.py"
+
 ### P2 - Exercise 4
 In this last exercise we were asked to use AI to try to improve and reduce lines of our code. In our case, in order to improve our code using the AI we have implemented the fifth new unit tests  as we have comented in the introduction. The tests are included in the `unit_tests.py` file. And to run them, as we have already explained, we have tu use the next command from the terminal inside the `Practice_2` folder:
 
